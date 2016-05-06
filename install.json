@@ -21,6 +21,12 @@
   },
   "options": {
     "properties": {
+      "location": {
+        "order": 1,
+        "title": "location",
+        "type": "object",
+        "format": "element"
+      }
     }
   }
 }

@@ -1,5 +1,11 @@
 {
   "resources": {
+    "head": [
+      {
+        "type": "script",
+        "src": "./vendor/button.js"
+      }
+    ],
     "body": [
       {
         "type": "style",
@@ -8,6 +14,10 @@
       {
         "type": "script",
         "src": "./build/app.js"
+      },
+      {
+        "type": "script",
+        "src": "./vendor/button.js"
       }
     ]
   },

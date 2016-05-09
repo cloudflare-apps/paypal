@@ -70,14 +70,17 @@
               "default": "buynow"
             },
             "name": {
+              "order": 3,
               "title": "Name of product",
               "type": "string"
               },
-            "amount": {
+            "price": {
+              "order": 4,
               "title": "Price of product",
-              "type": "integer"
+              "type": "number"
               },
             "howOften": {
+              "order": 5,
               "title": "How often in a period should a customer be billed?",
               "type": "integer",
               "showIf": {
@@ -85,6 +88,7 @@
               }
               },
             "timePeriod": {
+              "order": 6,
               "title": "How long is the time period?",
               "type": "string",
               "showIf": {
@@ -105,14 +109,54 @@
               "default": "M"
               },
             "currency": {
+              "order": 7,
               "title": "Currency",
               "type": "string"
               },
-            "quantity": {},
-            "tax": {},
-            "shipping": {},
-            "size": {},
-            "style": {}
+            "quantity": {
+              "order": 8,
+              "title": "Quantity",
+              "description": "You can set how many of the product a person will purchase by default",
+              "type": "integer"
+              },
+            "tax": {
+              "order": 9,
+              "title": "Tax",
+              "type": "number"
+              },
+            "shipping": {
+              "order": 10,
+              "title": "Shipping Price",
+              "type": "number"
+              },
+            "size": {
+              "order": 11,
+              "Title": "Button size",
+              "type": "string",
+              "enum": [
+                "small",
+                "large"
+              ],
+              "enumNames": {
+                "small": "Small",
+                "large": "Large"
+              },
+              "default": "small"
+              },
+            "style": {
+              "order": 12,
+              "title": "Style",
+              "type": "string",
+              "enum": [
+                "primary",
+                "secondary"
+              ],
+              "enumNames": {
+                "primary": "Primary",
+                "secondary": "Secondary"
+                },
+              "default": "primary"
+            }
           }
         }
       }

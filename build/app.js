@@ -4,49 +4,36 @@
   if (!window.addEventListener) return; // Check for IE9+
 
   var options = INSTALL_OPTIONS;
-  var element = void 0;
-  var paypalURL = "https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=";
+  var elements = [];
+  var PAYPAL_SCRIPT_URL = "https://www.paypalobjects.com/js/external/paypal-button.min.js";
 
   function updateElement() {
     var _options = options;
     var buttons = _options.buttons;
 
 
-    buttons.filter(function ($) {
-      return $.name && $.price && $.quantity && $.tax && $.shipping && $.howOften && $.timePeriod;
-    }).forEach(function (_ref, i) {
-      var location = _ref.location;
-      var type = _ref.type;
-      var name = _ref.name;
-      var amount = _ref.amount;
-      var howOften = _ref.howOften;
-      var timePeriod = _ref.timePeriod;
-      var currency = _ref.currency;
-      var quantity = _ref.quantity;
-      var tax = _ref.tax;
-      var shipping = _ref.shipping;
-      var size = _ref.size;
-      var style = _ref.style;
-
-      element = Eager.createElement(location, element);
-
+    buttons
+    // .filter($ => $.name && $.price && $.quantity && $.tax && $.shipping && $.howOften && $.timePeriod)
+    .forEach(function (attrs, i) {
       var paypalButton = document.createElement("script");
 
-      paypalButton.setAttribute("src", "" + paypalURL + options.merchant);
-      paypalButton.setAttribute("data-paypalButton", "" + type);
+      paypalButton.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;
+      paypalButton.setAttribute("data-button", attrs.type);
       paypalButton.setAttribute("data-type", "form");
-      paypalButton.setAttribute("data-name", "" + name);
-      paypalButton.setAttribute("data-amount", "" + amount);
-      paypalButton.setAttribute("data-currency", "" + currency);
-      paypalButton.setAttribute("data-quantity", "" + quantity);
-      paypalButton.setAttribute("data-tax", "" + tax);
-      paypalButton.setAttribute("data-shipping", "" + shipping);
-      paypalButton.setAttribute("data-size", "" + size);
-      paypalButton.setAttribute("data-style", "" + style);
-      if (type === "subscribe") {
-        paypalButton.setAttribute("data-reoccurance", "" + howOften);
-        paypalButton.setAttribute("data-period", "" + timePeriod);
+      paypalButton.setAttribute("data-name", attrs.name);
+      paypalButton.setAttribute("data-amount", attrs.amount);
+      paypalButton.setAttribute("data-currency", attrs.currency);
+      paypalButton.setAttribute("data-quantity", attrs.quantity);
+      paypalButton.setAttribute("data-tax", attrs.tax);
+      paypalButton.setAttribute("data-shipping", attrs.shipping);
+      paypalButton.setAttribute("data-size", attrs.size);
+      paypalButton.setAttribute("data-style", attrs.style);
+      if (attrs.type === "subscribe") {
+        paypalButton.setAttribute("data-reoccurence", attrs.reoccurence);
+        paypalButton.setAttribute("data-period", attrs.timePeriod);
       }
+
+      var element = elements[i] = Eager.createElement(location, elements[i]);
 
       element.appendChild(paypalButton);
     });

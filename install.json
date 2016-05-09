@@ -29,7 +29,7 @@
     "properties": {
       "merchantID": {
         "title": "Merchant ID",
-        "description": "Get your merchant id from paypal",
+        "description": "Enter your Merchant ID or email associated with Paypal",
         "order": 1,
         "type": "string"
         },
@@ -48,7 +48,7 @@
               "format": "element",
               "default": {
                 "selector": "body",
-                "method": "append"
+                "method": "prepend"
               }
             },
             "type": {

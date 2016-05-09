@@ -73,12 +73,12 @@
               "order": 3,
               "title": "Name of product",
               "type": "string"
-              },
-            "price": {
+            },
+            "amount": {
               "order": 4,
               "title": "Price of product",
               "type": "number"
-              },
+            },
             "howOften": {
               "order": 5,
               "title": "How often in a period should a customer be billed?",
@@ -86,7 +86,7 @@
               "showIf": {
                 "buttons[].type": "subscribe"
               }
-              },
+            },
             "timePeriod": {
               "order": 6,
               "title": "How long is the time period?",
@@ -107,28 +107,28 @@
                 "Y": "Yearly"
                 },
               "default": "M"
-              },
+            },
             "currency": {
               "order": 7,
               "title": "Currency",
               "type": "string"
-              },
+            },
             "quantity": {
               "order": 8,
               "title": "Quantity",
               "description": "You can set how many of the product a person will purchase by default",
               "type": "integer"
-              },
+            },
             "tax": {
               "order": 9,
               "title": "Tax",
               "type": "number"
-              },
+            },
             "shipping": {
               "order": 10,
               "title": "Shipping Price",
               "type": "number"
-              },
+            },
             "size": {
               "order": 11,
               "Title": "Button size",
@@ -142,7 +142,7 @@
                 "large": "Large"
               },
               "default": "small"
-              },
+            },
             "style": {
               "order": 12,
               "title": "Style",

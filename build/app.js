@@ -7,28 +7,22 @@
   var element = void 0;
 
   function updateElement() {
-    var merchantID = "";
-    var button = "subscribe";
-    var productName = "SWAG";
-    var price = 7.00;
-    var size = "small";
-    var style = "secondary";
-    var shipping = 2.50;
-    var tax = 153.00;
-    var currency = "USD";
-    var howMany = 12;
+    function addOptions(button) {
+      element = Eager.createElement(button.location, element);
 
-    // only if subscription
-    var howOften = 1;
-    var timePeriod = "M";
+      element.innerHTML = "<script async src=\"https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=" + options.merchant + "\"\n        data-button=\"" + button.type + "\"\n        data-type=\"form\"\n        data-name=\"" + button.name + "\"\n        data-amount=\"" + button.price + "\"\n        data-currency=\"" + button.currency + "\"\n        data-quantity=\"" + button.quantity + "\"\n        data-tax=\"" + button.tax + "\"\n        data-shipping=\"" + button.shipping + "\"\n        data-size=\"" + button.size + "\"\n        data-style=\"" + button.style + "\"\n      ></script>";
 
-    element = Eager.createElement(options.buttons.location, element);
+      // if subscribe
+      // element.setAttribute("data-reoccurance", button.howOften)
+      // element.setAttribute("data-period", button.timePeriod)
+    }
 
-    element.innerHTML = "<script async src=\"https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=" + merchantID + "\"\n      data-button=\"" + button + "\"\n      data-type=\"form\"\n      data-name=\"" + productName + "\"\n      data-amount=\"" + price + "\"\n      data-currency=\"" + currency + "\"\n      data-quantity=\"" + howMany + "\"\n      data-tax=\"" + tax + "\"\n      data-shipping=\"" + shipping + "\"\n      data-size=\"" + size + "\"\n      data-style=\"" + style + "\"\n    ></script>";
-
-    // if subscribe
-    element.setAttribute("data-reoccurance", howOften);
-    element.setAttribute("data-period", timePeriod);
+    function addButton() {
+      for (var i = 0; i < options.buttons.length; i++) {
+        addOptions(options.buttons[i]);
+      }
+    }
+    addButton();
   }
 
   if (document.readyState === "loading") {

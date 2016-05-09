@@ -33,7 +33,7 @@
         paypalButton.setAttribute("data-period", attrs.timePeriod);
       }
 
-      var element = elements[i] = Eager.createElement(location, elements[i]);
+      var element = elements[i] = Eager.createElement(attrs.location, elements[i]);
 
       element.appendChild(paypalButton);
     });

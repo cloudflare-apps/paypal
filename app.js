@@ -29,7 +29,7 @@
         paypalButton.setAttribute("data-period", attrs.timePeriod)
       }
 
-      const element = elements[i] = Eager.createElement(location, elements[i])
+      const element = elements[i] = Eager.createElement(attrs.location, elements[i])
 
       element.appendChild(paypalButton)
     })

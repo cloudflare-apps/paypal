@@ -25,7 +25,7 @@
       paypalButton.setAttribute("data-size", attrs.size)
       paypalButton.setAttribute("data-style", attrs.style)
       if (attrs.type === "subscribe") {
-        paypalButton.setAttribute("data-reoccurence", attrs.reoccurence)
+        paypalButton.setAttribute("data-recurrence", attrs.recurrence)
         paypalButton.setAttribute("data-period", attrs.timePeriod)
       }
 

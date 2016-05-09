@@ -79,7 +79,7 @@
               "title": "Price of product",
               "type": "number"
             },
-            "reoccurence": {
+            "recurrence": {
               "order": 5,
               "title": "How often in a period should a customer be billed?",
               "type": "integer",

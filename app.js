@@ -3,35 +3,36 @@
 
   let options = INSTALL_OPTIONS
   let element
+  const paypalURL = "https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant="
 
   function updateElement() {
-    function addOptions(button) {
-      element = Eager.createElement(button.location, element)
+    const {buttons} = options
 
-      element.innerHTML = `<script async src="https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=${options.merchant}"
-        data-button="${button.type}"
-        data-type="form"
-        data-name="${button.name}"
-        data-amount="${button.price}"
-        data-currency="${button.currency}"
-        data-quantity="${button.quantity}"
-        data-tax="${button.tax}"
-        data-shipping="${button.shipping}"
-        data-size="${button.size}"
-        data-style="${button.style}"
-      ></script>`
+    buttons
+    .filter($ => $.name && $.price && $.quantity && $.tax && $.shipping && $.howOften && $.timePeriod)
+    .forEach(({location, type, name, amount, howOften, timePeriod, currency, quantity, tax, shipping, size, style}, i) => {
+      element = Eager.createElement(location, element)
 
-      // if subscribe
-      // element.setAttribute("data-reoccurance", button.howOften)
-      // element.setAttribute("data-period", button.timePeriod)
-    }
+      const paypalButton = document.createElement("script")
 
-    function addButton() {
-      for (let i = 0; i < options.buttons.length; i++){
-        addOptions(options.buttons[i])
+      paypalButton.setAttribute("src", `${paypalURL}${options.merchant}`)
+      paypalButton.setAttribute("data-paypalButton", `${type}`)
+      paypalButton.setAttribute("data-type", "form")
+      paypalButton.setAttribute("data-name", `${name}`)
+      paypalButton.setAttribute("data-amount", `${amount}`)
+      paypalButton.setAttribute("data-currency", `${currency}`)
+      paypalButton.setAttribute("data-quantity", `${quantity}`)
+      paypalButton.setAttribute("data-tax", `${tax}`)
+      paypalButton.setAttribute("data-shipping", `${shipping}`)
+      paypalButton.setAttribute("data-size", `${size}`)
+      paypalButton.setAttribute("data-style", `${style}`)
+      if (type === "subscribe") {
+        paypalButton.setAttribute("data-reoccurance", `${howOften}`)
+        paypalButton.setAttribute("data-period", `${timePeriod}`)
       }
-    }
-    addButton()
+
+      element.appendChild(paypalButton)
+    })
   }
 
   if (document.readyState === "loading") {

@@ -5,24 +5,51 @@
 
   var options = INSTALL_OPTIONS;
   var element = void 0;
+  var paypalURL = "https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=";
 
   function updateElement() {
-    function addOptions(button) {
-      element = Eager.createElement(button.location, element);
+    var _options = options;
+    var buttons = _options.buttons;
 
-      element.innerHTML = "<script async src=\"https://www.paypalobjects.com/js/external/paypal-button.min.js?merchant=" + options.merchant + "\"\n        data-button=\"" + button.type + "\"\n        data-type=\"form\"\n        data-name=\"" + button.name + "\"\n        data-amount=\"" + button.price + "\"\n        data-currency=\"" + button.currency + "\"\n        data-quantity=\"" + button.quantity + "\"\n        data-tax=\"" + button.tax + "\"\n        data-shipping=\"" + button.shipping + "\"\n        data-size=\"" + button.size + "\"\n        data-style=\"" + button.style + "\"\n      ></script>";
 
-      // if subscribe
-      // element.setAttribute("data-reoccurance", button.howOften)
-      // element.setAttribute("data-period", button.timePeriod)
-    }
+    buttons.filter(function ($) {
+      return $.name && $.price && $.quantity && $.tax && $.shipping && $.howOften && $.timePeriod;
+    }).forEach(function (_ref, i) {
+      var location = _ref.location;
+      var type = _ref.type;
+      var name = _ref.name;
+      var amount = _ref.amount;
+      var howOften = _ref.howOften;
+      var timePeriod = _ref.timePeriod;
+      var currency = _ref.currency;
+      var quantity = _ref.quantity;
+      var tax = _ref.tax;
+      var shipping = _ref.shipping;
+      var size = _ref.size;
+      var style = _ref.style;
 
-    function addButton() {
-      for (var i = 0; i < options.buttons.length; i++) {
-        addOptions(options.buttons[i]);
+      element = Eager.createElement(location, element);
+
+      var paypalButton = document.createElement("script");
+
+      paypalButton.setAttribute("src", "" + paypalURL + options.merchant);
+      paypalButton.setAttribute("data-paypalButton", "" + type);
+      paypalButton.setAttribute("data-type", "form");
+      paypalButton.setAttribute("data-name", "" + name);
+      paypalButton.setAttribute("data-amount", "" + amount);
+      paypalButton.setAttribute("data-currency", "" + currency);
+      paypalButton.setAttribute("data-quantity", "" + quantity);
+      paypalButton.setAttribute("data-tax", "" + tax);
+      paypalButton.setAttribute("data-shipping", "" + shipping);
+      paypalButton.setAttribute("data-size", "" + size);
+      paypalButton.setAttribute("data-style", "" + style);
+      if (type === "subscribe") {
+        paypalButton.setAttribute("data-reoccurance", "" + howOften);
+        paypalButton.setAttribute("data-period", "" + timePeriod);
       }
-    }
-    addButton();
+
+      element.appendChild(paypalButton);
+    });
   }
 
   if (document.readyState === "loading") {

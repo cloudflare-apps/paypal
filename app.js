@@ -3,7 +3,7 @@
 
   let options = INSTALL_OPTIONS
   const elements = []
-  const PAYPAL_SCRIPT_URL = "https://www.paypalobjects.com/js/external/paypal-button.min.js"
+  const PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js"
 
   function updateElement() {
     const {buttons} = options
@@ -13,6 +13,7 @@
     .forEach((attrs, i) => {
       const paypalButton = document.createElement("script")
 
+      // TODO find production host
       paypalButton.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
       paypalButton.setAttribute("data-button", attrs.type)
       paypalButton.setAttribute("data-type", "form")

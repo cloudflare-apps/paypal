@@ -5,7 +5,7 @@
 
   var options = INSTALL_OPTIONS;
   var elements = [];
-  var PAYPAL_SCRIPT_URL = "https://www.paypalobjects.com/js/external/paypal-button.min.js";
+  var PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js";
 
   function updateElement() {
     var _options = options;
@@ -17,6 +17,7 @@
     .forEach(function (attrs, i) {
       var paypalButton = document.createElement("script");
 
+      // TODO find production host
       paypalButton.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;
       paypalButton.setAttribute("data-button", attrs.type);
       paypalButton.setAttribute("data-type", "form");

@@ -45,6 +45,7 @@
 
   window.INSTALL_SCOPE = {
     setOptions(nextOptions) {
+      elements.forEach(element => Eager.createElement(null, element))
       options = nextOptions
 
       updateElement()

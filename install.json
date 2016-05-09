@@ -28,8 +28,8 @@
   "options": {
     "properties": {
       "merchantID": {
-        "title": "Merchant ID",
-        "description": "Enter your Merchant ID or email associated with Paypal",
+        "title": "Email Address",
+        "description": "Enter your email associated with Paypal or your Merchant ID",
         "order": 1,
         "type": "string"
         },

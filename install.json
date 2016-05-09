@@ -14,10 +14,6 @@
       {
         "type": "script",
         "src": "./build/app.js"
-      },
-      {
-        "type": "script",
-        "src": "./vendor/button.js"
       }
     ]
   },
@@ -31,11 +27,94 @@
   },
   "options": {
     "properties": {
-      "location": {
+      "merchantID": {
+        "title": "Merchant ID",
+        "description": "Get your merchant id from paypal",
         "order": 1,
-        "title": "location",
-        "type": "object",
-        "format": "element"
+        "type": "string"
+        },
+      "buttons": {
+        "title": "Paypal Buttons",
+        "type": "array",
+        "order": 2,
+        "items": {
+          "type": "object",
+          "title": "slide",
+          "properties": {
+            "location": {
+              "order": 1,
+              "title": "location",
+              "type": "object",
+              "format": "element",
+              "default": {
+                "selector": "body",
+                "method": "append"
+              }
+            },
+            "type": {
+              "order": 2,
+              "title": "Type of button",
+              "type": "string",
+              "enum": [
+                "buynow",
+                "cart",
+                "donate",
+                "subscribe"
+              ],
+              "enumNames": {
+                "buynow": "Buy Now",
+                "cart": "Add to cart",
+                "donate": "Donate",
+                "subscribe": "Subscribe"
+              },
+              "default": "buynow"
+            },
+            "name": {
+              "title": "Name of product",
+              "type": "string"
+              },
+            "amount": {
+              "title": "Price of product",
+              "type": "integer"
+              },
+            "howOften": {
+              "title": "How often in a period should a customer be billed?",
+              "type": "integer",
+              "showIf": {
+                "buttons[].type": "subscribe"
+              }
+              },
+            "timePeriod": {
+              "title": "How long is the time period?",
+              "type": "string",
+              "showIf": {
+                "buttons[].type": "subscribe"
+              },
+              "enum": [
+                "D",
+                "W",
+                "M",
+                "Y"
+              ],
+              "enumNames": {
+                "D": "Daily",
+                "W": "Weekly",
+                "M": "Monthly",
+                "Y": "Yearly"
+                },
+              "default": "M"
+              },
+            "currency": {
+              "title": "Currency",
+              "type": "string"
+              },
+            "quantity": {},
+            "tax": {},
+            "shipping": {},
+            "size": {},
+            "style": {}
+          }
+        }
       }
     }
   }

@@ -127,27 +127,20 @@
                 },
               "default": "USD"
             },
-            "quantity": {
-              "order": 8,
-              "title": "Quantity",
-              "description": "You can set how many of the product a person will purchase by default",
-              "type": "integer",
-              "placeholder": 1
-            },
             "tax": {
-              "order": 9,
+              "order": 8,
               "title": "Tax",
               "type": "number",
               "placeholder": 2.12
             },
             "shipping": {
-              "order": 10,
+              "order": 9,
               "title": "Shipping Price",
               "type": "number",
               "placeholder": 5.32
             },
             "size": {
-              "order": 11,
+              "order": 10,
               "Title": "Button size",
               "type": "string",
               "enum": [
@@ -161,7 +154,7 @@
               "default": "small"
             },
             "style": {
-              "order": 12,
+              "order": 11,
               "title": "Style",
               "type": "string",
               "enum": [

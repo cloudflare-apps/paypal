@@ -34,6 +34,35 @@
         "type": "string",
         "placeholder": "Your@email.com"
         },
+      "region": {
+        "order": 2,
+        "type": "object",
+        "properties": {
+          "currency": {
+            "order": 1,
+            "title": "Currency",
+            "type": "string",
+            "enum": [
+              "USD",
+              "GBP",
+              "CAD"
+            ],
+            "enumNames": {
+              "USD": "United States Dollars ($)",
+              "GBP": "Great British Pounds (£)",
+              "CAD": "Canadian ($)"
+            },
+            "default": "USD"
+          },
+          "tax": {
+            "order": 2,
+            "title": "Tax",
+            "type": "number",
+            "placeholder": 2.12,
+            "default": 2.12
+          }
+        }
+      },
       "buttons": {
         "title": "Paypal Buttons",
         "description": "Paypal buttons will not appear on your screen until you have filled out the information for them below",
@@ -90,6 +119,7 @@
               "title": "Set how many times in a period a customer should be billed",
               "type": "integer",
               "placeholder": 1,
+              "default": 1,
               "showIf": {
                 "buttons[].type": "subscribe"
               }
@@ -115,38 +145,15 @@
                 },
               "default": "M"
             },
-            "currency": {
-              "order": 7,
-              "title": "Currency",
-              "type": "string",
-              "enum": [
-                "USD",
-                "GBP",
-                "CAD"
-              ],
-              "enumNames": {
-                "USD": "United States Dollars ($)",
-                "GBP": "Great British Pounds (£)",
-                "CAD": "Canadian ($)"
-                },
-              "default": "USD"
-            },
-            "tax": {
-              "order": 8,
-              "title": "Tax",
-              "type": "number",
-              "placeholder": 2.12,
-              "default": 2.12
-            },
             "shipping": {
-              "order": 9,
+              "order": 7,
               "title": "Shipping Price",
               "type": "number",
               "placeholder": 5.32,
               "default": 5.32
             },
             "style": {
-              "order": 11,
+              "order": 8,
               "title": "Style",
               "type": "string",
               "enum": [

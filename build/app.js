@@ -4,10 +4,12 @@
   if (!window.addEventListener) return; // Check for IE9+
 
   var options = INSTALL_OPTIONS;
+  var updateTimeout = void 0;
+  var delay = 1500;
   var elements = [];
   var PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js";
 
-  function updateElement() {
+  function updateElements() {
     var _options = options;
     var buttons = _options.buttons;
 
@@ -19,6 +21,7 @@
 
       // TODO find production host
       paypalButton.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;
+      paypalButton.async;
       paypalButton.setAttribute("data-button", attrs.type);
       paypalButton.setAttribute("data-type", "form");
       paypalButton.setAttribute("data-name", attrs.name);
@@ -41,19 +44,23 @@
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", updateElement);
+    document.addEventListener("DOMContentLoaded", updateElements);
   } else {
-    updateElement();
+    updateElements();
   }
 
   window.INSTALL_SCOPE = {
     setOptions: function setOptions(nextOptions) {
-      elements.forEach(function (element) {
-        return Eager.createElement(null, element);
-      });
+      clearTimeout(updateTimeout);
       options = nextOptions;
 
-      updateElement();
+      updateTimeout = setTimeout(function () {
+        elements.forEach(function (element) {
+          return Eager.createElement(null, element);
+        });
+
+        updateElements();
+      }, delay);
     }
   };
 })();

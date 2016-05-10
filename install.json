@@ -31,10 +31,12 @@
         "title": "Paypal Email",
         "description": "Enter the email associated with your Paypal account or your <a target=\"_blank\" href=\"https://www.paypal.com/settings\"><strong>Merchant ID</strong></a>",
         "order": 1,
-        "type": "string"
+        "type": "string",
+        "placeholder": "Your@email.com"
         },
       "buttons": {
         "title": "Paypal Buttons",
+        "description": "Paypal buttons will not appear on your screen until you have filled out the information for them below",
         "type": "array",
         "order": 2,
         "items": {
@@ -73,13 +75,15 @@
               "order": 3,
               "title": "Name of product",
               "type": "string",
-              "placeholder": "Quilts"
+              "placeholder": "Quilts",
+              "default": "Quilts"
             },
             "amount": {
               "order": 4,
               "title": "Price of product",
               "type": "number",
-              "placeholder": 14.99
+              "placeholder": 14.99,
+              "default": 14.99
             },
             "recurrence": {
               "order": 5,
@@ -121,9 +125,9 @@
                 "CAD"
               ],
               "enumNames": {
-                "USD": "United States Dollars",
-                "GBP": "Great British Pounds",
-                "CAD": "Canadian"
+                "USD": "United States Dollars ($)",
+                "GBP": "Great British Pounds (£)",
+                "CAD": "Canadian ($)"
                 },
               "default": "USD"
             },
@@ -131,27 +135,15 @@
               "order": 8,
               "title": "Tax",
               "type": "number",
-              "placeholder": 2.12
+              "placeholder": 2.12,
+              "default": 2.12
             },
             "shipping": {
               "order": 9,
               "title": "Shipping Price",
               "type": "number",
-              "placeholder": 5.32
-            },
-            "size": {
-              "order": 10,
-              "Title": "Button size",
-              "type": "string",
-              "enum": [
-                "small",
-                "large"
-              ],
-              "enumNames": {
-                "small": "Small",
-                "large": "Large"
-              },
-              "default": "small"
+              "placeholder": 5.32,
+              "default": 5.32
             },
             "style": {
               "order": 11,

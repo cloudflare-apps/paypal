@@ -6,6 +6,12 @@
   const delay = 1500
   const elements = []
   const PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js"
+  const TIME_PERIOD_SYMBOLS = {
+  	D: "Daily"
+  	W: "Weekly"
+  	M: "Monthly"
+  	Y: "Yearly"
+  }
 
   function updateElements() {
     if (options.merchant) {
@@ -20,25 +26,29 @@
 
           let currencySymbol
 
-          if (attrs.currency === "GBP") {
+          if (options.region.currency === "GBP") {
             currencySymbol = "£"
           }
           else {
             currencySymbol = "$"
           }
 
-          paypalPrice.innerText = `${currencySymbol}${attrs.amount} ${attrs.currency} `
+          paypalPrice.innerHTML = `${attrs.name}<br>${currencySymbol}${attrs.amount} ${options.region.currency} `
 
           if (attrs.type === "subscribe") {
-            paypalPrice.innerText += `${attrs.recurrence} times ${attrs.timePeriod} `
+            paypalPrice.innerHTML += `${attrs.recurrence} times ${TIME_PERIOD_SYMBOLS[attrs.timePeriod]} `
           }
 
-          if (attrs.tax) {
-            paypalPrice.innerText += `+ ${currencySymbol}${attrs.tax} tax `
+          if (options.region.tax && !attrs.shipping) {
+            paypalPrice.innerHTML += `<small>+ ${currencySymbol}${options.region.tax} tax </small>`
           }
+          else if (attrs.shipping && !options.region.tax) {
+            paypalPrice.innerHTML += `<small>+ ${currencySymbol}${attrs.shipping} shipping</small>`
+          }
+          else if (attrs.shipping && options.region.tax) {
+            const shippingAndTax = attrs.shipping + options.region.tax
 
-          if (attrs.shipping) {
-            paypalPrice.innerText += `+ ${currencySymbol}${attrs.shipping} shipping`
+            paypalPrice.innerHTML += `<small>+ ${currencySymbol}${shippingAndTax} shipping and tax</small>`
           }
 
           // TODO find production host
@@ -53,14 +63,14 @@
           else {
             paypalButton.setAttribute("data-amount", attrs.amount)
           }
-          paypalButton.setAttribute("data-currency", attrs.currency)
+          paypalButton.setAttribute("data-currency", options.region.currency)
           if (attrs.type === "buynow" || attrs.type === "cart") {
             paypalButton.setAttribute("data-quantity-editable", 1)
           }
           else {
             paypalButton.setAttribute("data-quantity", 1)
           }
-          paypalButton.setAttribute("data-tax", attrs.tax)
+          paypalButton.setAttribute("data-tax", options.region.tax)
           paypalButton.setAttribute("data-shipping", attrs.shipping)
           paypalButton.setAttribute("data-size", "small")
           paypalButton.setAttribute("data-style", attrs.style)

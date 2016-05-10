@@ -27,9 +27,9 @@
   },
   "options": {
     "properties": {
-      "merchantID": {
-        "title": "Email Address",
-        "description": "Enter your email associated with Paypal or your Merchant ID",
+      "merchant": {
+        "title": "Paypal Email",
+        "description": "Enter the email associated with your Paypal account or your <a target=\"_blank\" href=\"https://www.paypal.com/settings\"><strong>Merchant ID</strong></a>",
         "order": 1,
         "type": "string"
         },
@@ -72,24 +72,27 @@
             "name": {
               "order": 3,
               "title": "Name of product",
-              "type": "string"
+              "type": "string",
+              "placeholder": "Quilts"
             },
             "amount": {
               "order": 4,
               "title": "Price of product",
-              "type": "number"
+              "type": "number",
+              "placeholder": 14.99
             },
             "recurrence": {
               "order": 5,
-              "title": "How often in a period should a customer be billed?",
+              "title": "Set how many times in a period a customer should be billed",
               "type": "integer",
+              "placeholder": 1,
               "showIf": {
                 "buttons[].type": "subscribe"
               }
             },
             "timePeriod": {
               "order": 6,
-              "title": "How long is the time period?",
+              "title": "Set the length of the period",
               "type": "string",
               "showIf": {
                 "buttons[].type": "subscribe"
@@ -111,23 +114,37 @@
             "currency": {
               "order": 7,
               "title": "Currency",
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "USD",
+                "GBP",
+                "CAD"
+              ],
+              "enumNames": {
+                "USD": "United States Dollars",
+                "GBP": "Great British Pounds",
+                "CAD": "Canadian"
+                },
+              "default": "USD"
             },
             "quantity": {
               "order": 8,
               "title": "Quantity",
               "description": "You can set how many of the product a person will purchase by default",
-              "type": "integer"
+              "type": "integer",
+              "placeholder": 1
             },
             "tax": {
               "order": 9,
               "title": "Tax",
-              "type": "number"
+              "type": "number",
+              "placeholder": 2.12
             },
             "shipping": {
               "order": 10,
               "title": "Shipping Price",
-              "type": "number"
+              "type": "number",
+              "placeholder": 5.32
             },
             "size": {
               "order": 11,
@@ -152,8 +169,8 @@
                 "secondary"
               ],
               "enumNames": {
-                "primary": "Primary",
-                "secondary": "Secondary"
+                "primary": "Blue",
+                "secondary": "Grey"
                 },
               "default": "primary"
             }

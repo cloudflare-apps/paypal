@@ -39,14 +39,18 @@
             "title": "Currency",
             "type": "string",
             "enum": [
-              "USD",
+              "CAD",
+              "EUR",
               "GBP",
-              "CAD"
+              "JPY",
+              "USD"
             ],
             "enumNames": {
-              "USD": "United States Dollars ($)",
-              "GBP": "Great British Pounds (£)",
-              "CAD": "Canadian ($)"
+              "CAD": "CAD ($)",
+              "EUR": "EUR (€)",
+              "GBP": "GBP (£)",
+              "JPY": "JPY (¥)",
+              "USD": "USD ($)"
             },
             "default": "USD"
           },
@@ -54,32 +58,26 @@
             "order": 2,
             "title": "Tax",
             "type": "number",
-            "placeholder": 2.12,
-            "default": 2.12
+            "placeholder": 0.00,
+            "default": 0.00
           }
         }
       },
       "buttons": {
         "title": "Paypal Buttons",
-        "description": "Paypal buttons will not appear on your screen until you have filled out the information for them below",
         "type": "array",
         "order": 2,
+        "showIf": {
+          "merchant": {
+            "op": "!=",
+            "value": ""
+          }
+        },
         "items": {
           "type": "object",
-          "title": "slide",
           "properties": {
-            "location": {
-              "order": 1,
-              "title": "location",
-              "type": "object",
-              "format": "element",
-              "default": {
-                "selector": "body",
-                "method": "prepend"
-              }
-            },
             "type": {
-              "order": 2,
+              "order": 1,
               "title": "Type of button",
               "type": "string",
               "enum": [
@@ -90,28 +88,27 @@
               ],
               "enumNames": {
                 "buynow": "Buy Now",
-                "cart": "Add to cart",
+                "cart": "Add to Cart",
                 "donate": "Donate",
                 "subscribe": "Subscribe"
               },
               "default": "buynow"
             },
             "name": {
-              "order": 3,
+              "order": 2,
               "title": "Name of product",
               "type": "string",
-              "placeholder": "Quilts",
-              "default": "Quilts"
+              "placeholder": "Electronics, e-book, clothes, etc"
             },
             "amount": {
-              "order": 4,
+              "order": 3,
               "title": "Price of product",
               "type": "number",
-              "placeholder": 14.99,
-              "default": 14.99
+              "placeholder": 0.00,
+              "default": 0
             },
             "recurrence": {
-              "order": 5,
+              "order": 4,
               "title": "Set how many times in a period a customer should be billed",
               "type": "integer",
               "placeholder": 1,
@@ -121,8 +118,8 @@
               }
             },
             "timePeriod": {
-              "order": 6,
-              "title": "Set the length of the period",
+              "order": 5,
+              "title": "Length of payment period",
               "type": "string",
               "showIf": {
                 "buttons[].type": "subscribe"
@@ -142,15 +139,25 @@
               "default": "M"
             },
             "shipping": {
-              "order": 7,
+              "order": 6,
               "title": "Shipping Price",
               "type": "number",
-              "placeholder": 5.32,
-              "default": 5.32
+              "placeholder": 0.00,
+              "default": 0
+            },
+            "location": {
+              "order": 7,
+              "title": "Button location",
+              "type": "object",
+              "format": "element",
+              "default": {
+                "selector": "body",
+                "method": "prepend"
+              }
             },
             "style": {
               "order": 8,
-              "title": "Style",
+              "title": "Button color",
               "type": "string",
               "enum": [
                 "primary",

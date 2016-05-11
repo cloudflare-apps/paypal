@@ -8,6 +8,12 @@
   var delay = 1500;
   var elements = [];
   var PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js";
+  var TIME_PERIOD_SYMBOLS = {
+    D: "Daily",
+    W: "Weekly",
+    M: "Monthly",
+    Y: "Yearly"
+  };
 
   function updateElements() {
     if (options.merchant) {
@@ -24,6 +30,7 @@
         var paypalPrice = document.createElement("eager-paypal-price");
 
         var currencySymbol = void 0;
+        var times = void 0;
 
         if (options.region.currency === "GBP") {
           currencySymbol = "£";
@@ -36,7 +43,12 @@
         paypalPrice.innerHTML = "" + currencySymbol + attrs.amount + " " + options.region.currency + " ";
 
         if (attrs.type === "subscribe") {
-          paypalPrice.innerHTML += attrs.recurrence + " times " + TIME_PERIOD_SYMBOLS[attrs.timePeriod] + " ";
+          if (attrs.recurrence === 1) {
+            times = "time";
+          } else {
+            times = "times";
+          }
+          paypalPrice.innerHTML += attrs.recurrence + " " + times + " " + TIME_PERIOD_SYMBOLS[attrs.timePeriod] + " ";
         }
 
         if (options.region.tax && !attrs.shipping) {

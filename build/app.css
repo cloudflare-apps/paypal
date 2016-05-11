@@ -1,3 +1,7 @@
+eager-app {
+  display: inline-block;
+}
+
 eager-item-name {
   display: block;
   padding-bottom: 7px;
@@ -6,7 +10,10 @@ eager-item-name {
 eager-info-wrapper {
   background-color: #efefef;
   display: block;
-  width: 17.7em;
   border-radius: 5px;
   padding: .5em;
+}
+
+eager-shipping-and-tax {
+  display: block;
 }

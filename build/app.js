@@ -5,6 +5,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 (function () {
   if (!window.addEventListener) return; // Check for IE9+
 
+  var language = window.navigator.userLanguage || window.navigator.language;
   var UPDATE_DELAY = 1500;
   var elements = [];
   // TODO find production host
@@ -44,7 +45,19 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
       return delimiter + character + accumulator;
     }, "");
 
-    return [formatted, decimals].join(".");
+    return CURRENCY_SYMBOL[options.region.currency] + [formatted, decimals].join(".");
+  }
+
+  function localizeCurrency(integer) {
+    var answer = void 0;
+
+    if (integer.toLocaleString) {
+      answer = integer.toLocaleString(language, { style: "currency", currency: options.region.currency });
+    } else {
+      answer = humanizedNumber(integer);
+    }
+
+    return answer;
   }
 
   function updateElements() {
@@ -67,7 +80,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
       itemName.innerHTML = attrs.name;
 
-      if (toLocaleString) price.innerHTML = "" + CURRENCY_SYMBOL[region.currency] + attrs.amount.toLocaleString();else price.innerHTML = "" + CURRENCY_SYMBOL[region.currency] + humanizedNumber(attrs.amount);
+      price.innerHTML = "" + localizeCurrency(attrs.amount);
 
       if (attrs.type === "subscribe") {
         time = attrs.recurrence === 1 ? "time" : "times";
@@ -75,13 +88,13 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
       }
 
       if (region.tax && attrs.type !== "donate" || attrs.shipping && attrs.type !== "donate") {
-        var additionalCost = toLocaleString ? (region.tax + attrs.shipping).toLocaleString() : humanizedNumber(region.tax + attrs.shipping);
+        var additionalCost = localizeCurrency(region.tax + attrs.shipping);
 
         var label = void 0;
 
         if (region.tax && attrs.shipping) label = "shipping & tax";else if (region.tax) label = "tax";else if (attrs.shipping) label = "shipping";
 
-        shippingAndTax.innerHTML += "<small> + " + CURRENCY_SYMBOL[region.currency] + additionalCost + " " + label + "</small>";
+        shippingAndTax.innerHTML += "<small> + " + additionalCost + " " + label + "</small>";
       }
 
       button.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;

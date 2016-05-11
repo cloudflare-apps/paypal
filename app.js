@@ -1,6 +1,7 @@
 (function () {
   if (!window.addEventListener) return // Check for IE9+
 
+  const language = window.navigator.userLanguage || window.navigator.language
   const UPDATE_DELAY = 1500
   const elements = []
   // TODO find production host
@@ -35,7 +36,20 @@
         return delimiter + character + accumulator
       }, "")
 
-    return [formatted, decimals].join(".")
+    return CURRENCY_SYMBOL[options.region.currency] + [formatted, decimals].join(".")
+  }
+
+  function localizeCurrency(integer) {
+    let answer
+
+    if (integer.toLocaleString) {
+      answer = integer.toLocaleString(language, {style: "currency", currency: options.region.currency})
+    }
+    else {
+      answer = humanizedNumber(integer)
+    }
+
+    return answer
   }
 
   function updateElements() {
@@ -56,9 +70,7 @@
 
       itemName.innerHTML = attrs.name
 
-      if (toLocaleString) price.innerHTML = `${CURRENCY_SYMBOL[region.currency]}${attrs.amount.toLocaleString()}`
-      else price.innerHTML = `${CURRENCY_SYMBOL[region.currency]}${humanizedNumber(attrs.amount)}`
-
+      price.innerHTML = `${localizeCurrency(attrs.amount)}`
 
       if (attrs.type === "subscribe") {
         time = attrs.recurrence === 1 ? "time" : "times"
@@ -66,7 +78,7 @@
       }
 
       if (region.tax && attrs.type !== "donate" || attrs.shipping && attrs.type !== "donate") {
-        const additionalCost = toLocaleString ? (region.tax + attrs.shipping).toLocaleString() : humanizedNumber(region.tax + attrs.shipping)
+        const additionalCost = localizeCurrency(region.tax + attrs.shipping)
 
         let label
 
@@ -74,7 +86,7 @@
         else if (region.tax) label = "tax"
         else if (attrs.shipping) label = "shipping"
 
-        shippingAndTax.innerHTML += `<small> + ${CURRENCY_SYMBOL[region.currency]}${additionalCost} ${label}</small>`
+        shippingAndTax.innerHTML += `<small> + ${additionalCost} ${label}</small>`
       }
 
       button.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`

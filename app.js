@@ -1,10 +1,9 @@
 (function () {
   if (!window.addEventListener) return // Check for IE9+
 
-  let options = INSTALL_OPTIONS
-  let updateTimeout
-  const delay = 1500
+  const UPDATE_DELAY = 1500
   const elements = []
+  // TODO find production host
   const PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js"
   const TIME_PERIOD_SYMBOLS = {
     D: "Daily",
@@ -12,91 +11,82 @@
     M: "Monthly",
     Y: "Yearly"
   }
+  const currencySymbol = {
+    GBP: "£",
+    USD: "$",
+    CAD: "$",
+    EUR: "€",
+    JPY: "¥"
+  }
+
+  let options = INSTALL_OPTIONS
+  let updateTimeout
 
   function updateElements() {
-    if (options.merchant) {
-      const {buttons} = options
+    if (!options.merchant) return
 
-      buttons
-        .filter($ => $.name && $.amount)
-        .forEach((attrs, i) => {
-          const paypalButton = document.createElement("script")
-          const paypalInfoWrapper = document.createElement("eager-paypal-info-wrapper")
-          const paypalItemName = document.createElement("eager-paypal-item-name")
-          const paypalPrice = document.createElement("eager-paypal-price")
+    const {buttons} = options
 
-          let currencySymbol
-          let times
+    buttons
+    .forEach((attrs, i) => {
+      const Button = document.createElement("script")
+      const InfoWrapper = document.createElement("eager-info-wrapper")
+      const ItemName = document.createElement("eager-item-name")
+      const Price = document.createElement("eager-price")
 
-          if (options.region.currency === "GBP") {
-            currencySymbol = "£"
-          }
-          else {
-            currencySymbol = "$"
-          }
+      let time
 
-          paypalItemName.innerHTML = `${attrs.name}`
+      ItemName.innerHTML = attrs.name
 
-          paypalPrice.innerHTML = `${currencySymbol}${attrs.amount} ${options.region.currency} `
+      Price.innerHTML = `${currencySymbol[options.region.currency]}${attrs.amount}`
 
-          if (attrs.type === "subscribe") {
-            if (attrs.recurrence === 1){
-              times = "time"
-            }
-            else {
-              times = "times"
-            }
-            paypalPrice.innerHTML += `${attrs.recurrence} ${times} ${TIME_PERIOD_SYMBOLS[attrs.timePeriod]} `
-          }
+      if (attrs.type === "subscribe") {
+        time = attrs.recurrence === 1 ? "time" : "times"
+        Price.innerHTML += ` ${attrs.recurrence} ${time} ${TIME_PERIOD_SYMBOLS[attrs.timePeriod]}`
+      }
 
-          if (options.region.tax && !attrs.shipping) {
-            paypalPrice.innerHTML += `<small>+ ${currencySymbol}${options.region.tax} tax </small>`
-          }
-          else if (attrs.shipping && !options.region.tax) {
-            paypalPrice.innerHTML += `<small>+ ${currencySymbol}${attrs.shipping} shipping</small>`
-          }
-          else if (attrs.shipping && options.region.tax) {
-            const shippingAndTax = attrs.shipping + options.region.tax
+      if (options.region.tax && attrs.type !== "donate" || attrs.shipping && attrs.type !== "donate") {
+        const additionalCost = (options.region.tax + attrs.shipping).toFixed(2)
 
-            paypalPrice.innerHTML += `<small>+ ${currencySymbol}${shippingAndTax} shipping and tax</small>`
-          }
+        let label
 
-          // TODO find production host
-          paypalButton.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
-          paypalButton.async
-          paypalButton.setAttribute("data-button", attrs.type)
-          paypalButton.setAttribute("data-type", attrs.type)
-          paypalButton.setAttribute("data-name", attrs.name)
-          if (attrs.type === "donate"){
-            paypalButton.setAttribute("data-amount-editable", 100)
-          }
-          else {
-            paypalButton.setAttribute("data-amount", attrs.amount)
-          }
-          paypalButton.setAttribute("data-currency", options.region.currency)
-          if (attrs.type === "buynow" || attrs.type === "cart") {
-            paypalButton.setAttribute("data-quantity-editable", 1)
-          }
-          else {
-            paypalButton.setAttribute("data-quantity", 1)
-          }
-          paypalButton.setAttribute("data-tax", options.region.tax)
-          paypalButton.setAttribute("data-shipping", attrs.shipping)
-          paypalButton.setAttribute("data-size", "small")
-          paypalButton.setAttribute("data-style", attrs.style)
-          if (attrs.type === "subscribe") {
-            paypalButton.setAttribute("data-recurrence", attrs.recurrence)
-            paypalButton.setAttribute("data-period", attrs.timePeriod)
-          }
+        if (options.region.tax && attrs.shipping) label = "shipping & tax"
+        else if (options.region.tax) label = "tax"
+        else if (attrs.shipping) label = "shipping"
 
-          const element = elements[i] = Eager.createElement(attrs.location, elements[i])
+        Price.innerHTML += `<small> + ${currencySymbol[options.region.currency]}${additionalCost} ${label}</small>`
+      }
 
-          element.appendChild(paypalInfoWrapper)
-          paypalInfoWrapper.appendChild(paypalItemName)
-          paypalInfoWrapper.appendChild(paypalPrice)
-          paypalInfoWrapper.appendChild(paypalButton)
-        })
-    }
+      Button.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
+      Button.setAttribute("data-button", attrs.type)
+      Button.setAttribute("data-type", attrs.type)
+      Button.setAttribute("data-name", attrs.name)
+      Button.setAttribute("data-currency", options.region.currency)
+      Button.setAttribute("data-tax", options.region.tax)
+      Button.setAttribute("data-shipping", attrs.shipping)
+      Button.setAttribute("data-size", "small")
+      Button.setAttribute("data-style", attrs.style)
+
+      if (attrs.type === "donate") Button.setAttribute("data-amount-editable", 100)
+      else Button.setAttribute("data-amount", attrs.amount)
+
+      if (attrs.type === "buynow" || attrs.type === "cart") Button.setAttribute("data-quantity-editable", 1)
+      else Button.setAttribute("data-quantity", 1)
+
+      if (attrs.type === "subscribe") {
+        Button.setAttribute("data-recurrence", attrs.recurrence)
+        Button.setAttribute("data-period", attrs.timePeriod)
+      }
+
+      if (INSTALL_ID === "preview") Button.setAttribute("data-env", "sandbox")
+
+      const element = elements[i] = Eager.createElement(attrs.location, elements[i])
+
+      InfoWrapper.appendChild(ItemName)
+      InfoWrapper.appendChild(Price)
+      InfoWrapper.appendChild(Button)
+      element.appendChild(InfoWrapper)
+    })
   }
 
   if (document.readyState === "loading") {
@@ -115,7 +105,7 @@
         elements.forEach(element => Eager.createElement(null, element))
 
         updateElements()
-      }, delay)
+      }, UPDATE_DELAY)
     }
   }
 }())

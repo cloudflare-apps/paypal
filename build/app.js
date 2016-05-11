@@ -3,10 +3,9 @@
 (function () {
   if (!window.addEventListener) return; // Check for IE9+
 
-  var options = INSTALL_OPTIONS;
-  var updateTimeout = void 0;
-  var delay = 1500;
+  var UPDATE_DELAY = 1500;
   var elements = [];
+  // TODO find production host
   var PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js";
   var TIME_PERIOD_SYMBOLS = {
     D: "Daily",
@@ -14,87 +13,79 @@
     M: "Monthly",
     Y: "Yearly"
   };
+  var currencySymbol = {
+    GBP: "£",
+    USD: "$",
+    CAD: "$",
+    EUR: "€",
+    JPY: "¥"
+  };
+
+  var options = INSTALL_OPTIONS;
+  var updateTimeout = void 0;
 
   function updateElements() {
-    if (options.merchant) {
-      var _options = options;
-      var buttons = _options.buttons;
+    if (!options.merchant) return;
+
+    var _options = options;
+    var buttons = _options.buttons;
 
 
-      buttons.filter(function ($) {
-        return $.name && $.amount;
-      }).forEach(function (attrs, i) {
-        var paypalButton = document.createElement("script");
-        var paypalInfoWrapper = document.createElement("eager-paypal-info-wrapper");
-        var paypalItemName = document.createElement("eager-paypal-item-name");
-        var paypalPrice = document.createElement("eager-paypal-price");
+    buttons.forEach(function (attrs, i) {
+      var Button = document.createElement("script");
+      var InfoWrapper = document.createElement("eager-info-wrapper");
+      var ItemName = document.createElement("eager-item-name");
+      var Price = document.createElement("eager-price");
 
-        var currencySymbol = void 0;
-        var times = void 0;
+      var time = void 0;
 
-        if (options.region.currency === "GBP") {
-          currencySymbol = "£";
-        } else {
-          currencySymbol = "$";
-        }
+      ItemName.innerHTML = attrs.name;
 
-        paypalItemName.innerHTML = "" + attrs.name;
+      Price.innerHTML = "" + currencySymbol[options.region.currency] + attrs.amount;
 
-        paypalPrice.innerHTML = "" + currencySymbol + attrs.amount + " " + options.region.currency + " ";
+      if (attrs.type === "subscribe") {
+        time = attrs.recurrence === 1 ? "time" : "times";
+        Price.innerHTML += " " + attrs.recurrence + " " + time + " " + TIME_PERIOD_SYMBOLS[attrs.timePeriod];
+      }
 
-        if (attrs.type === "subscribe") {
-          if (attrs.recurrence === 1) {
-            times = "time";
-          } else {
-            times = "times";
-          }
-          paypalPrice.innerHTML += attrs.recurrence + " " + times + " " + TIME_PERIOD_SYMBOLS[attrs.timePeriod] + " ";
-        }
+      if (options.region.tax && attrs.type !== "donate" || attrs.shipping && attrs.type !== "donate") {
+        var additionalCost = (options.region.tax + attrs.shipping).toFixed(2);
 
-        if (options.region.tax && !attrs.shipping) {
-          paypalPrice.innerHTML += "<small>+ " + currencySymbol + options.region.tax + " tax </small>";
-        } else if (attrs.shipping && !options.region.tax) {
-          paypalPrice.innerHTML += "<small>+ " + currencySymbol + attrs.shipping + " shipping</small>";
-        } else if (attrs.shipping && options.region.tax) {
-          var shippingAndTax = attrs.shipping + options.region.tax;
+        var label = void 0;
 
-          paypalPrice.innerHTML += "<small>+ " + currencySymbol + shippingAndTax + " shipping and tax</small>";
-        }
+        if (options.region.tax && attrs.shipping) label = "shipping & tax";else if (options.region.tax) label = "tax";else if (attrs.shipping) label = "shipping";
 
-        // TODO find production host
-        paypalButton.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;
-        paypalButton.async;
-        paypalButton.setAttribute("data-button", attrs.type);
-        paypalButton.setAttribute("data-type", attrs.type);
-        paypalButton.setAttribute("data-name", attrs.name);
-        if (attrs.type === "donate") {
-          paypalButton.setAttribute("data-amount-editable", 100);
-        } else {
-          paypalButton.setAttribute("data-amount", attrs.amount);
-        }
-        paypalButton.setAttribute("data-currency", options.region.currency);
-        if (attrs.type === "buynow" || attrs.type === "cart") {
-          paypalButton.setAttribute("data-quantity-editable", 1);
-        } else {
-          paypalButton.setAttribute("data-quantity", 1);
-        }
-        paypalButton.setAttribute("data-tax", options.region.tax);
-        paypalButton.setAttribute("data-shipping", attrs.shipping);
-        paypalButton.setAttribute("data-size", "small");
-        paypalButton.setAttribute("data-style", attrs.style);
-        if (attrs.type === "subscribe") {
-          paypalButton.setAttribute("data-recurrence", attrs.recurrence);
-          paypalButton.setAttribute("data-period", attrs.timePeriod);
-        }
+        Price.innerHTML += "<small> + " + currencySymbol[options.region.currency] + additionalCost + " " + label + "</small>";
+      }
 
-        var element = elements[i] = Eager.createElement(attrs.location, elements[i]);
+      Button.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;
+      Button.setAttribute("data-button", attrs.type);
+      Button.setAttribute("data-type", attrs.type);
+      Button.setAttribute("data-name", attrs.name);
+      Button.setAttribute("data-currency", options.region.currency);
+      Button.setAttribute("data-tax", options.region.tax);
+      Button.setAttribute("data-shipping", attrs.shipping);
+      Button.setAttribute("data-size", "small");
+      Button.setAttribute("data-style", attrs.style);
 
-        element.appendChild(paypalInfoWrapper);
-        paypalInfoWrapper.appendChild(paypalItemName);
-        paypalInfoWrapper.appendChild(paypalPrice);
-        paypalInfoWrapper.appendChild(paypalButton);
-      });
-    }
+      if (attrs.type === "donate") Button.setAttribute("data-amount-editable", 100);else Button.setAttribute("data-amount", attrs.amount);
+
+      if (attrs.type === "buynow" || attrs.type === "cart") Button.setAttribute("data-quantity-editable", 1);else Button.setAttribute("data-quantity", 1);
+
+      if (attrs.type === "subscribe") {
+        Button.setAttribute("data-recurrence", attrs.recurrence);
+        Button.setAttribute("data-period", attrs.timePeriod);
+      }
+
+      if (INSTALL_ID === "preview") Button.setAttribute("data-env", "sandbox");
+
+      var element = elements[i] = Eager.createElement(attrs.location, elements[i]);
+
+      InfoWrapper.appendChild(ItemName);
+      InfoWrapper.appendChild(Price);
+      InfoWrapper.appendChild(Button);
+      element.appendChild(InfoWrapper);
+    });
   }
 
   if (document.readyState === "loading") {
@@ -114,7 +105,7 @@
         });
 
         updateElements();
-      }, delay);
+      }, UPDATE_DELAY);
     }
   };
 })();

@@ -11,7 +11,7 @@
     M: "Monthly",
     Y: "Yearly"
   }
-  const currencySymbol = {
+  const CURRENCY_SYMBOL = {
     GBP: "£",
     USD: "$",
     CAD: "$",
@@ -46,23 +46,23 @@
 
     buttons
     .forEach((attrs, i) => {
-      const Button = document.createElement("script")
-      const InfoWrapper = document.createElement("eager-info-wrapper")
-      const ItemName = document.createElement("eager-item-name")
-      const Price = document.createElement("eager-price")
+      const button = document.createElement("script")
+      const infoWrapper = document.createElement("eager-info-wrapper")
+      const itemName = document.createElement("eager-item-name")
+      const price = document.createElement("eager-price")
       const shippingAndTax = document.createElement("eager-shipping-and-tax")
 
       let time
 
-      ItemName.innerHTML = attrs.name
+      itemName.innerHTML = attrs.name
 
-      if (toLocaleString) Price.innerHTML = `${currencySymbol[region.currency]}${attrs.amount.toLocaleString()}`
-      else Price.innerHTML = `${currencySymbol[region.currency]}${humanizedNumber(attrs.amount)}`
+      if (toLocaleString) price.innerHTML = `${CURRENCY_SYMBOL[region.currency]}${attrs.amount.toLocaleString()}`
+      else price.innerHTML = `${CURRENCY_SYMBOL[region.currency]}${humanizedNumber(attrs.amount)}`
 
 
       if (attrs.type === "subscribe") {
         time = attrs.recurrence === 1 ? "time" : "times"
-        Price.innerHTML += ` ${attrs.recurrence} ${time} ${TIME_PERIOD_SYMBOLS[attrs.timePeriod]}`
+        price.innerHTML += ` ${attrs.recurrence} ${time} ${TIME_PERIOD_SYMBOLS[attrs.timePeriod]}`
       }
 
       if (region.tax && attrs.type !== "donate" || attrs.shipping && attrs.type !== "donate") {
@@ -74,39 +74,39 @@
         else if (region.tax) label = "tax"
         else if (attrs.shipping) label = "shipping"
 
-        shippingAndTax.innerHTML += `<small> + ${currencySymbol[region.currency]}${additionalCost} ${label}</small>`
+        shippingAndTax.innerHTML += `<small> + ${CURRENCY_SYMBOL[region.currency]}${additionalCost} ${label}</small>`
       }
 
-      Button.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
-      Button.setAttribute("data-button", attrs.type)
-      Button.setAttribute("data-type", attrs.type)
-      Button.setAttribute("data-name", attrs.name)
-      Button.setAttribute("data-currency", region.currency)
-      Button.setAttribute("data-tax", region.tax)
-      Button.setAttribute("data-shipping", attrs.shipping)
-      Button.setAttribute("data-size", "small")
-      Button.setAttribute("data-style", attrs.style)
+      button.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
+      button.setAttribute("data-button", attrs.type)
+      button.setAttribute("data-type", attrs.type)
+      button.setAttribute("data-name", attrs.name)
+      button.setAttribute("data-currency", region.currency)
+      button.setAttribute("data-tax", region.tax)
+      button.setAttribute("data-shipping", attrs.shipping)
+      button.setAttribute("data-size", "small")
+      button.setAttribute("data-style", attrs.style)
 
-      if (attrs.type === "donate") Button.setAttribute("data-amount-editable", 100)
-      else Button.setAttribute("data-amount", attrs.amount)
+      if (attrs.type === "donate") button.setAttribute("data-amount-editable", 100)
+      else button.setAttribute("data-amount", attrs.amount)
 
-      if (attrs.type === "buynow" || attrs.type === "cart") Button.setAttribute("data-quantity-editable", 1)
-      else Button.setAttribute("data-quantity", 1)
+      if (attrs.type === "buynow" || attrs.type === "cart") button.setAttribute("data-quantity-editable", 1)
+      else button.setAttribute("data-quantity", 1)
 
       if (attrs.type === "subscribe") {
-        Button.setAttribute("data-recurrence", attrs.recurrence)
-        Button.setAttribute("data-period", attrs.timePeriod)
+        button.setAttribute("data-recurrence", attrs.recurrence)
+        button.setAttribute("data-period", attrs.timePeriod)
       }
 
-      if (INSTALL_ID === "preview") Button.setAttribute("data-env", "sandbox")
+      if (INSTALL_ID === "preview") button.setAttribute("data-env", "sandbox")
 
       const element = elements[i] = Eager.createElement(attrs.location, elements[i])
 
-      InfoWrapper.appendChild(ItemName)
-      InfoWrapper.appendChild(Price)
-      InfoWrapper.appendChild(shippingAndTax)
-      InfoWrapper.appendChild(Button)
-      element.appendChild(InfoWrapper)
+      infoWrapper.appendChild(itemName)
+      infoWrapper.appendChild(price)
+      infoWrapper.appendChild(shippingAndTax)
+      infoWrapper.appendChild(button)
+      element.appendChild(infoWrapper)
     })
   }
 

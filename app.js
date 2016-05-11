@@ -65,7 +65,7 @@
           paypalButton.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
           paypalButton.async
           paypalButton.setAttribute("data-button", attrs.type)
-          paypalButton.setAttribute("data-type", "form")
+          paypalButton.setAttribute("data-type", attrs.type)
           paypalButton.setAttribute("data-name", attrs.name)
           if (attrs.type === "donate"){
             paypalButton.setAttribute("data-amount-editable", 100)

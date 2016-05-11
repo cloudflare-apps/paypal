@@ -1,11 +1,6 @@
 {
   "resources": {
-    "head": [
-      {
-        "type": "script",
-        "src": "./vendor/button.js"
-      }
-    ],
+    "head": [],
     "body": [
       {
         "type": "style",

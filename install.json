@@ -35,6 +35,7 @@
         "placeholder": "Your@email.com"
         },
       "region": {
+        "title": "Region",
         "order": 2,
         "type": "object",
         "properties": {

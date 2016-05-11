@@ -6,12 +6,7 @@
   const delay = 1500
   const elements = []
   const PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js"
-  const TIME_PERIOD_SYMBOLS = {
-  	D: "Daily"
-  	W: "Weekly"
-  	M: "Monthly"
-  	Y: "Yearly"
-  }
+
 
   function updateElements() {
     if (options.merchant) {
@@ -21,8 +16,9 @@
         .filter($ => $.name && $.amount)
         .forEach((attrs, i) => {
           const paypalButton = document.createElement("script")
-
-          const paypalPrice = document.createElement("eager-price")
+          const paypalInfoWrapper = document.createElement("eager-paypal-info-wrapper")
+          const paypalItemName = document.createElement("eager-paypal-item-name")
+          const paypalPrice = document.createElement("eager-paypal-price")
 
           let currencySymbol
 
@@ -33,7 +29,9 @@
             currencySymbol = "$"
           }
 
-          paypalPrice.innerHTML = `${attrs.name}<br>${currencySymbol}${attrs.amount} ${options.region.currency} `
+          paypalItemName.innerHTML = `${attrs.name}`
+
+          paypalPrice.innerHTML = `${currencySymbol}${attrs.amount} ${options.region.currency} `
 
           if (attrs.type === "subscribe") {
             paypalPrice.innerHTML += `${attrs.recurrence} times ${TIME_PERIOD_SYMBOLS[attrs.timePeriod]} `
@@ -81,9 +79,10 @@
 
           const element = elements[i] = Eager.createElement(attrs.location, elements[i])
 
-          element.className = "eager-paypal"
-          element.appendChild(paypalPrice)
-          element.appendChild(paypalButton)
+          element.appendChild(paypalInfoWrapper)
+          paypalInfoWrapper.appendChild(paypalItemName)
+          paypalInfoWrapper.appendChild(paypalPrice)
+          paypalInfoWrapper.appendChild(paypalButton)
         })
     }
   }

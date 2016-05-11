@@ -19,8 +19,9 @@
         return $.name && $.amount;
       }).forEach(function (attrs, i) {
         var paypalButton = document.createElement("script");
-
-        var paypalPrice = document.createElement("eager-price");
+        var paypalInfoWrapper = document.createElement("eager-paypal-info-wrapper");
+        var paypalItemName = document.createElement("eager-paypal-item-name");
+        var paypalPrice = document.createElement("eager-paypal-price");
 
         var currencySymbol = void 0;
 
@@ -30,10 +31,12 @@
           currencySymbol = "$";
         }
 
-        paypalPrice.innerHTML = attrs.name + "<br>" + currencySymbol + attrs.amount + " " + options.region.currency + " ";
+        paypalItemName.innerHTML = "" + attrs.name;
+
+        paypalPrice.innerHTML = "" + currencySymbol + attrs.amount + " " + options.region.currency + " ";
 
         if (attrs.type === "subscribe") {
-          paypalPrice.innerHTML += attrs.recurrence + " times " + attrs.timePeriod + " ";
+          paypalPrice.innerHTML += attrs.recurrence + " times " + TIME_PERIOD_SYMBOLS[attrs.timePeriod] + " ";
         }
 
         if (options.region.tax && !attrs.shipping) {
@@ -74,9 +77,10 @@
 
         var element = elements[i] = Eager.createElement(attrs.location, elements[i]);
 
-        element.className = "eager-paypal";
-        element.appendChild(paypalPrice);
-        element.appendChild(paypalButton);
+        element.appendChild(paypalInfoWrapper);
+        paypalInfoWrapper.appendChild(paypalItemName);
+        paypalInfoWrapper.appendChild(paypalPrice);
+        paypalInfoWrapper.appendChild(paypalButton);
       });
     }
   }

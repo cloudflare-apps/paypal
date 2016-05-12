@@ -2,18 +2,28 @@ eager-app {
   display: inline-block;
 }
 
-eager-item-name {
-  display: block;
-  padding-bottom: 7px;
-}
-
 eager-info-wrapper {
   background-color: #efefef;
   display: block;
   border-radius: 5px;
-  padding: .5em;
+  padding: 1em;
+}
+
+eager-item-name {
+  display: block;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+eager-price {
+  line-height: 2.5em;
 }
 
 eager-shipping-and-tax {
   display: block;
+  line-height: 1.5em;
+}
+
+.paypal-button-widget {
+  text-align: center;
 }

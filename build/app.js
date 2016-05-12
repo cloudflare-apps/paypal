@@ -7,7 +7,6 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
   var language = window.navigator.userLanguage || window.navigator.language;
   var UPDATE_DELAY = 1500;
-  var DONATE_AMOUNT = 100;
   var QUANTITY_AMOUNT = 1;
   var elements = [];
   // TODO find production host
@@ -87,7 +86,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
         price.innerHTML += " " + attrs.recurrence + " " + time + " " + TIME_PERIOD_SYMBOLS[attrs.timePeriod];
       }
 
-      if (region.tax && attrs.type !== "donate" || attrs.shipping && attrs.type !== "donate") {
+      if (attrs.type !== "donate" && (region.tax || attrs.shipping)) {
         var additionalCost = localizeCurrency(region.tax + attrs.shipping);
 
         var label = void 0;

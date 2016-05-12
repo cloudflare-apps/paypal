@@ -3,7 +3,6 @@
 
   const language = window.navigator.userLanguage || window.navigator.language
   const UPDATE_DELAY = 1500
-  const DONATE_AMOUNT = 100
   const QUANTITY_AMOUNT = 1
   const elements = []
   // TODO find production host
@@ -77,7 +76,7 @@
         price.innerHTML += ` ${attrs.recurrence} ${time} ${TIME_PERIOD_SYMBOLS[attrs.timePeriod]}`
       }
 
-      if (region.tax && attrs.type !== "donate" || attrs.shipping && attrs.type !== "donate") {
+      if (attrs.type !== "donate" && (region.tax || attrs.shipping)) {
         const additionalCost = localizeCurrency(region.tax + attrs.shipping)
 
         let label

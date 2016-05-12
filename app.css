@@ -1,8 +1,8 @@
-eager-app {
+.eager-paypal-buttons {
   display: inline-block;
 }
 
-.info-wrapper {
+.eager-info-wrapper {
   background-color: #efefef;
   display: block;
   border-radius: 5px;
@@ -10,17 +10,17 @@ eager-app {
   margin-bottom: 5px;
 }
 
-.item-name {
+.eager-item-name {
   display: block;
   font-size: 2em;
   font-weight: bold;
 }
 
-.price {
+.eager-price {
   line-height: 2.5em;
 }
 
-.shipping-and-tax {
+.eager-shipping-and-tax {
   display: block;
   line-height: 1.5em;
 }
@@ -29,6 +29,6 @@ eager-app {
   text-align: center;
 }
 
-.info-wrapper, .info-wrapper {
+.eager-info-wrapper, .eager-info-wrapper {
   margin-right: 5px;
 }

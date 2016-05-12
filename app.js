@@ -66,11 +66,6 @@
       const price = document.createElement("eager-price")
       const shippingAndTax = document.createElement("eager-shipping-and-tax")
 
-      infoWrapper.className = "eager-info-wrapper"
-      itemName.className = "eager-item-name"
-      price.className = "eager-price"
-      shippingAndTax.className = "eager-shipping-and-tax"
-
       itemName.innerHTML = attrs.name
 
       if (attrs.type !== "donate") price.innerHTML = localizeCurrency(attrs.amount)

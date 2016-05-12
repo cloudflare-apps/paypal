@@ -7,6 +7,7 @@ eager-info-wrapper {
   display: block;
   border-radius: 5px;
   padding: 1em;
+  margin-bottom: 5px;
 }
 
 eager-item-name {
@@ -26,4 +27,8 @@ eager-shipping-and-tax {
 
 .paypal-button-widget {
   text-align: center;
+}
+
+eager-info-wrapper, eager-info-wrapper {
+  margin-right: 5px;
 }

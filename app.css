@@ -2,7 +2,7 @@
   display: inline-block;
 }
 
-.eager-info-wrapper {
+.eager-paypal-buttons .eager-info-wrapper {
   background-color: #efefef;
   display: block;
   border-radius: 5px;
@@ -10,25 +10,25 @@
   margin-bottom: 5px;
 }
 
-.eager-item-name {
+.eager-paypal-buttons .eager-item-name {
   display: block;
   font-size: 2em;
   font-weight: bold;
 }
 
-.eager-price {
+.eager-paypal-buttons .eager-price {
   line-height: 2.5em;
 }
 
-.eager-shipping-and-tax {
+.eager-paypal-buttons .eager-shipping-and-tax {
   display: block;
   line-height: 1.5em;
 }
 
-.paypal-button-widget {
+.eager-paypal-buttons .paypal-button-widget {
   text-align: center;
 }
 
-.eager-info-wrapper, .eager-info-wrapper {
+.eager-paypal-buttons .eager-info-wrapper, .eager-info-wrapper {
   margin-right: 5px;
 }

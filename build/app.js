@@ -5,6 +5,14 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 (function () {
   if (!window.addEventListener) return; // Check for IE9+
 
+  var supportsLocale = false;
+
+  try {
+    0..toLocaleString("i");
+  } catch (error) {
+    supportsLocale = error.name === "RangeError";
+  }
+
   var language = window.navigator.userLanguage || window.navigator.language;
   var UPDATE_DELAY = 1500;
   var QUANTITY_AMOUNT = 1;
@@ -49,16 +57,13 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
     return [formatted, decimals].join(".");
   }
 
-  function localizeCurrency(integer) {
-    var answer = void 0;
+  function localizeCurrency(number) {
+    if (supportsLocale) return number.toLocaleString(language, {
+      style: "currency",
+      currency: options.region.currency
+    });
 
-    if (integer.toLocaleString) {
-      answer = integer.toLocaleString(language, { style: "currency", currency: options.region.currency });
-    } else {
-      answer = CURRENCY_SYMBOL[options.region.currency] + humanizedNumber(integer);
-    }
-
-    return answer;
+    return CURRENCY_SYMBOL[options.region.currency] + humanizedNumber(number);
   }
 
   function updateElements() {

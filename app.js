@@ -1,6 +1,15 @@
 (function () {
   if (!window.addEventListener) return // Check for IE9+
 
+  let supportsLocale = false
+
+  try {
+    (0).toLocaleString("i")
+  }
+  catch (error) {
+    supportsLocale = error.name === "RangeError"
+  }
+
   const language = window.navigator.userLanguage || window.navigator.language
   const UPDATE_DELAY = 1500
   const QUANTITY_AMOUNT = 1
@@ -40,17 +49,13 @@
     return [formatted, decimals].join(".")
   }
 
-  function localizeCurrency(integer) {
-    let answer
+  function localizeCurrency(number) {
+    if (supportsLocale) return number.toLocaleString(language, {
+      style: "currency",
+      currency: options.region.currency
+    })
 
-    if (integer.toLocaleString) {
-      answer = integer.toLocaleString(language, {style: "currency", currency: options.region.currency})
-    }
-    else {
-      answer = CURRENCY_SYMBOL[options.region.currency] + humanizedNumber(integer)
-    }
-
-    return answer
+    return CURRENCY_SYMBOL[options.region.currency] + humanizedNumber(number)
   }
 
   function updateElements() {

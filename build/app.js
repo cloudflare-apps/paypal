@@ -45,7 +45,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
       return delimiter + character + accumulator;
     }, "");
 
-    return CURRENCY_SYMBOL[options.region.currency] + [formatted, decimals].join(".");
+    return [formatted, decimals].join(".");
   }
 
   function localizeCurrency(integer) {
@@ -54,7 +54,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
     if (integer.toLocaleString) {
       answer = integer.toLocaleString(language, { style: "currency", currency: options.region.currency });
     } else {
-      answer = humanizedNumber(integer);
+      answer = CURRENCY_SYMBOL[options.region.currency] + humanizedNumber(integer);
     }
 
     return answer;
@@ -65,8 +65,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
     var _options = options;
     var buttons = _options.buttons;
-    var _options2 = options;
-    var region = _options2.region;
+    var region = _options.region;
 
 
     buttons.forEach(function (attrs, i) {
@@ -76,14 +75,13 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
       var price = document.createElement("eager-price");
       var shippingAndTax = document.createElement("eager-shipping-and-tax");
 
-      var time = void 0;
-
       itemName.innerHTML = attrs.name;
 
-      price.innerHTML = "" + localizeCurrency(attrs.amount);
+      if (attrs.type !== "donate") price.innerHTML = "" + localizeCurrency(attrs.amount);
 
       if (attrs.type === "subscribe") {
-        time = attrs.recurrence === 1 ? "time" : "times";
+        var time = attrs.recurrence === 1 ? "time" : "times";
+
         price.innerHTML += " " + attrs.recurrence + " " + time + " " + TIME_PERIOD_SYMBOLS[attrs.timePeriod];
       }
 

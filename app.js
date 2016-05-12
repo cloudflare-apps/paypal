@@ -36,7 +36,7 @@
         return delimiter + character + accumulator
       }, "")
 
-    return CURRENCY_SYMBOL[options.region.currency] + [formatted, decimals].join(".")
+    return [formatted, decimals].join(".")
   }
 
   function localizeCurrency(integer) {
@@ -46,7 +46,7 @@
       answer = integer.toLocaleString(language, {style: "currency", currency: options.region.currency})
     }
     else {
-      answer = humanizedNumber(integer)
+      answer = CURRENCY_SYMBOL[options.region.currency] + humanizedNumber(integer)
     }
 
     return answer
@@ -55,8 +55,7 @@
   function updateElements() {
     if (!options.merchant) return
 
-    const {buttons} = options
-    const {region} = options
+    const {buttons, region} = options
 
     buttons
     .forEach((attrs, i) => {
@@ -66,14 +65,13 @@
       const price = document.createElement("eager-price")
       const shippingAndTax = document.createElement("eager-shipping-and-tax")
 
-      let time
-
       itemName.innerHTML = attrs.name
 
-      price.innerHTML = `${localizeCurrency(attrs.amount)}`
+      if (attrs.type !== "donate") price.innerHTML = `${localizeCurrency(attrs.amount)}`
 
       if (attrs.type === "subscribe") {
-        time = attrs.recurrence === 1 ? "time" : "times"
+        const time = attrs.recurrence === 1 ? "time" : "times"
+
         price.innerHTML += ` ${attrs.recurrence} ${time} ${TIME_PERIOD_SYMBOLS[attrs.timePeriod]}`
       }
 

@@ -3,6 +3,8 @@
 
   const language = window.navigator.userLanguage || window.navigator.language
   const UPDATE_DELAY = 1500
+  const DONATE_AMOUNT = 100
+  const QUANTITY_AMOUNT = 1
   const elements = []
   // TODO find production host
   const PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js"
@@ -67,7 +69,7 @@
 
       itemName.innerHTML = attrs.name
 
-      if (attrs.type !== "donate") price.innerHTML = `${localizeCurrency(attrs.amount)}`
+      if (attrs.type !== "donate") price.innerHTML = localizeCurrency(attrs.amount)
 
       if (attrs.type === "subscribe") {
         const time = attrs.recurrence === 1 ? "time" : "times"
@@ -97,10 +99,10 @@
       button.setAttribute("data-size", "small")
       button.setAttribute("data-style", attrs.style)
 
-      if (attrs.type === "donate") button.setAttribute("data-amount-editable", 100)
+      if (attrs.type === "donate") button.setAttribute("data-amount-editable", attrs.amount)
       else button.setAttribute("data-amount", attrs.amount)
 
-      if (attrs.type === "buynow" || attrs.type === "cart") button.setAttribute("data-quantity-editable", 1)
+      if (attrs.type === "buynow" || attrs.type === "cart") button.setAttribute("data-quantity-editable", QUANTITY_AMOUNT)
       else button.setAttribute("data-quantity", 1)
 
       if (attrs.type === "subscribe") {

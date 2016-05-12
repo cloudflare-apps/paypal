@@ -7,6 +7,8 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
   var language = window.navigator.userLanguage || window.navigator.language;
   var UPDATE_DELAY = 1500;
+  var DONATE_AMOUNT = 100;
+  var QUANTITY_AMOUNT = 1;
   var elements = [];
   // TODO find production host
   var PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js";
@@ -77,7 +79,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
       itemName.innerHTML = attrs.name;
 
-      if (attrs.type !== "donate") price.innerHTML = "" + localizeCurrency(attrs.amount);
+      if (attrs.type !== "donate") price.innerHTML = localizeCurrency(attrs.amount);
 
       if (attrs.type === "subscribe") {
         var time = attrs.recurrence === 1 ? "time" : "times";
@@ -105,9 +107,9 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
       button.setAttribute("data-size", "small");
       button.setAttribute("data-style", attrs.style);
 
-      if (attrs.type === "donate") button.setAttribute("data-amount-editable", 100);else button.setAttribute("data-amount", attrs.amount);
+      if (attrs.type === "donate") button.setAttribute("data-amount-editable", attrs.amount);else button.setAttribute("data-amount", attrs.amount);
 
-      if (attrs.type === "buynow" || attrs.type === "cart") button.setAttribute("data-quantity-editable", 1);else button.setAttribute("data-quantity", 1);
+      if (attrs.type === "buynow" || attrs.type === "cart") button.setAttribute("data-quantity-editable", QUANTITY_AMOUNT);else button.setAttribute("data-quantity", 1);
 
       if (attrs.type === "subscribe") {
         button.setAttribute("data-recurrence", attrs.recurrence);

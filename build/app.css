@@ -29,6 +29,6 @@
   text-align: center;
 }
 
-.eager-paypal-buttons eager-info-wrapper, eager-info-wrapper {
-  margin-right: 5px;
+.eager-paypal-buttons + .eager-paypal-buttons {
+  margin-left: 5px;
 }

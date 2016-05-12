@@ -107,7 +107,7 @@
             },
             "amount": {
               "order": 3,
-              "title": "Price of product",
+              "title": "Price of product/Amount to donate by default",
               "type": "number",
               "placeholder": 0.00,
               "default": 0

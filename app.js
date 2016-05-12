@@ -66,10 +66,10 @@
       const price = document.createElement("eager-price")
       const shippingAndTax = document.createElement("eager-shipping-and-tax")
 
-      infoWrapper.className = "info-wrapper"
-      itemName.className = "item-name"
-      price.className = "price"
-      shippingAndTax.className = "shipping-and-tax"
+      infoWrapper.className = "eager-info-wrapper"
+      itemName.className = "eager-item-name"
+      price.className = "eager-price"
+      shippingAndTax.className = "eager-shipping-and-tax"
 
       itemName.innerHTML = attrs.name
 
@@ -118,6 +118,7 @@
 
       const element = elements[i] = Eager.createElement(attrs.location, elements[i])
 
+      element.className = "eager-paypal-buttons"
       infoWrapper.appendChild(itemName)
       infoWrapper.appendChild(price)
       infoWrapper.appendChild(shippingAndTax)

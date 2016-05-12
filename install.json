@@ -32,7 +32,8 @@
       "region": {
         "showIf": {
           "merchant": {
-            "!==": ""
+            "op": "!=",
+            "value": ""
           }
         },
         "title": "Region",

@@ -1,5 +1,6 @@
 {
   "resources": {
+    "head": [],
     "body": [
       {
         "type": "style",
@@ -21,6 +22,162 @@
   },
   "options": {
     "properties": {
+      "merchant": {
+        "title": "Paypal Email",
+        "description": "Enter the email associated with your Paypal account or your <a target=\"_blank\" href=\"https://www.paypal.com/settings\"><strong>Merchant ID</strong></a>",
+        "order": 1,
+        "type": "string",
+        "placeholder": "Your@email.com"
+        },
+      "region": {
+        "showIf": {
+          "merchant": {
+            "op": "!=",
+            "value": ""
+          }
+        },
+        "title": "Region",
+        "order": 2,
+        "type": "object",
+        "properties": {
+          "currency": {
+            "order": 1,
+            "title": "Currency",
+            "type": "string",
+            "enum": [
+              "CAD",
+              "EUR",
+              "GBP",
+              "JPY",
+              "USD"
+            ],
+            "enumNames": {
+              "CAD": "CAD ($)",
+              "EUR": "EUR (€)",
+              "GBP": "GBP (£)",
+              "JPY": "JPY (¥)",
+              "USD": "USD ($)"
+            },
+            "default": "USD"
+          },
+          "tax": {
+            "order": 2,
+            "title": "Tax",
+            "type": "number",
+            "placeholder": 0.00,
+            "default": 0.00
+          }
+        }
+      },
+      "buttons": {
+        "title": "Paypal Buttons",
+        "type": "array",
+        "order": 2,
+        "showIf": {
+          "merchant": {
+            "op": "!=",
+            "value": ""
+          }
+        },
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "order": 1,
+              "title": "Type of button",
+              "type": "string",
+              "enum": [
+                "buynow",
+                "cart",
+                "donate",
+                "subscribe"
+              ],
+              "enumNames": {
+                "buynow": "Buy Now",
+                "cart": "Add to Cart",
+                "donate": "Donate",
+                "subscribe": "Subscribe"
+              },
+              "default": "buynow"
+            },
+            "name": {
+              "order": 2,
+              "title": "Name of product",
+              "type": "string",
+              "placeholder": "Electronics, e-book, clothes, etc"
+            },
+            "amount": {
+              "order": 3,
+              "title": "Price of product/Amount to donate by default",
+              "type": "number",
+              "placeholder": 0.00,
+              "default": 0
+            },
+            "recurrence": {
+              "order": 4,
+              "title": "Set how many times in a period a customer should be billed",
+              "type": "integer",
+              "placeholder": 1,
+              "default": 1,
+              "showIf": {
+                "buttons[].type": "subscribe"
+              }
+            },
+            "timePeriod": {
+              "order": 5,
+              "title": "Length of payment period",
+              "type": "string",
+              "showIf": {
+                "buttons[].type": "subscribe"
+              },
+              "enum": [
+                "D",
+                "W",
+                "M",
+                "Y"
+              ],
+              "enumNames": {
+                "D": "Daily",
+                "W": "Weekly",
+                "M": "Monthly",
+                "Y": "Yearly"
+                },
+              "default": "M"
+            },
+            "shipping": {
+              "order": 6,
+              "title": "Shipping Price",
+              "type": "number",
+              "placeholder": 0.00,
+              "default": 0
+            },
+            "location": {
+              "order": 7,
+              "title": "Button location",
+              "type": "object",
+              "format": "element",
+              "default": {
+                "selector": "body",
+                "method": "prepend"
+              }
+            },
+            "style": {
+              "order": 8,
+              "title": "Button color",
+              "type": "string",
+              "enum": [
+                "primary",
+                "secondary"
+              ],
+              "enumNames": {
+                "primary": "Blue",
+                "secondary": "Grey"
+                },
+              "default": "primary"
+            }
+          }
+        }
+      }
     }
   }
 }

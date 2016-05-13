@@ -1,0 +1,34 @@
+.eager-paypal-buttons {
+  display: inline-block;
+}
+
+.eager-paypal-buttons eager-info-wrapper {
+  background-color: #efefef;
+  display: block;
+  border-radius: 5px;
+  padding: 1em;
+  margin-bottom: 5px;
+}
+
+.eager-paypal-buttons eager-item-name {
+  display: block;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.eager-paypal-buttons eager-price {
+  line-height: 2.5em;
+}
+
+.eager-paypal-buttons eager-shipping-and-tax {
+  display: block;
+  line-height: 1.5em;
+}
+
+.eager-paypal-buttons .paypal-button-widget {
+  text-align: center;
+}
+
+.eager-paypal-buttons + .eager-paypal-buttons {
+  margin-left: 5px;
+}

@@ -90,11 +90,10 @@
         shipping: $.shipping || 0,
         size: "small",
         style: "primary",
-        tax: tax.toPrecision(2),
+        tax: Math.round(tax * 100) / 100, // Convert to expected precision.
         type: $.type,
         [$.type === "buynow" || $.type === "cart" ? "quantity-editable" : "quantity"]: 1
       }
-
 
       if ($.type !== "donate") {
         const localizedAmount = localizeCurrency(attrs.amount)

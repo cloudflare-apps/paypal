@@ -2,37 +2,37 @@
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 (function () {
   if (!window.addEventListener) return; // Check for IE9+
 
-  var supportsLocale = false;
+  var hasNativeLocale = false;
 
   try {
     0..toLocaleString("i");
   } catch (error) {
-    supportsLocale = error.name === "RangeError";
+    hasNativeLocale = error.name === "RangeError";
   }
 
-  var language = window.navigator.userLanguage || window.navigator.language;
+  var ATTENTION_CLASS = "eager-attention";
   var UPDATE_DELAY = 1500;
-  var QUANTITY_AMOUNT = 1;
-  var elements = [];
-  // TODO find production host
-  var PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js";
-  var TIME_PERIOD_SYMBOLS = {
-    D: "Daily",
-    W: "Weekly",
-    M: "Monthly",
-    Y: "Yearly"
+  var PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/EagerApps/PayPalButtons/master/vendor/button.js";
+  var PERIOD_LABELS = {
+    D: "day",
+    W: "week",
+    M: "month",
+    Y: "year"
   };
-  var CURRENCY_SYMBOL = {
-    GBP: "£",
-    USD: "$",
+  var CURRENCY_SYMBOLS = {
     CAD: "$",
     EUR: "€",
-    JPY: "¥"
+    GBP: "£",
+    JPY: "¥",
+    USD: "$"
   };
-
+  var language = window.navigator.language || window.navigator.userLanguage;
+  var container = void 0;
   var options = INSTALL_OPTIONS;
   var updateTimeout = void 0;
 
@@ -58,12 +58,12 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
   }
 
   function localizeCurrency(number) {
-    if (supportsLocale) return number.toLocaleString(language, {
-      style: "currency",
-      currency: options.region.currency
+    if (hasNativeLocale) return number.toLocaleString(language, {
+      currency: options.locale.currency,
+      style: "currency"
     });
 
-    return CURRENCY_SYMBOL[options.region.currency] + humanizedNumber(number);
+    return CURRENCY_SYMBOLS[options.locale.currency] + humanizedNumber(number);
   }
 
   function updateElements() {
@@ -71,66 +71,76 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
     var _options = options;
     var buttons = _options.buttons;
-    var region = _options.region;
+    var locale = _options.locale;
+    var location = _options.location;
 
+    var taxPercentage = parseFloat(locale.taxPercentage || 0, 10) / 100;
 
-    buttons.forEach(function (attrs, i) {
-      var button = document.createElement("script");
-      var infoWrapper = document.createElement("eager-info-wrapper");
+    container = Eager.createElement(location, container);
+    container.className = "eager-paypal-buttons";
+
+    buttons.forEach(function ($) {
+      var _attrs;
+
+      var script = document.createElement("script");
       var itemName = document.createElement("eager-item-name");
       var price = document.createElement("eager-price");
-      var shippingAndTax = document.createElement("eager-shipping-and-tax");
+      var priceDetails = document.createElement("eager-price-details");
+      var element = document.createElement("eager-button-container");
 
-      itemName.innerHTML = attrs.name;
+      itemName.textContent = $.name;
+      if (!itemName.textContent) itemName.className = ATTENTION_CLASS;
 
-      if (attrs.type !== "donate") price.innerHTML = localizeCurrency(attrs.amount);
+      element.appendChild(itemName);
 
-      if (attrs.type === "subscribe") {
-        var time = attrs.recurrence === 1 ? "time" : "times";
+      script.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;
 
-        price.innerHTML += " " + attrs.recurrence + " " + time + " " + TIME_PERIOD_SYMBOLS[attrs.timePeriod];
+      var tax = $.type === "donate" ? 0 : taxPercentage * ($.amount || 0);
+      var attrs = (_attrs = {}, _defineProperty(_attrs, $.type === "donate" ? "amount-editable" : "amount", $.amount || 0), _defineProperty(_attrs, "lc", language.replace("-", "_")), _defineProperty(_attrs, "button", $.type), _defineProperty(_attrs, "currency", locale.currency), _defineProperty(_attrs, "host", INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com"), _defineProperty(_attrs, "name", $.name), _defineProperty(_attrs, "shipping", $.shipping || 0), _defineProperty(_attrs, "size", "small"), _defineProperty(_attrs, "style", "primary"), _defineProperty(_attrs, "tax", Math.round(tax * 100) / 100), _defineProperty(_attrs, "type", $.type), _defineProperty(_attrs, $.type === "buynow" || $.type === "cart" ? "quantity-editable" : "quantity", 1), _attrs);
+
+      if ($.type !== "donate") {
+        var localizedAmount = localizeCurrency(attrs.amount);
+
+        if ($.type === "subscribe") {
+          var plural = $.recurrence === 1 ? "" : "s"; // HACK: brittle.
+
+          price.textContent = localizedAmount + " for " + $.recurrence + " " + PERIOD_LABELS[$.period] + plural;
+
+          attrs.recurrence = $.recurrence;
+          attrs.period = $.period;
+
+          element.appendChild(price);
+        } else {
+          element.appendChild(price);
+          price.textContent = localizedAmount;
+
+          if (tax || attrs.shipping) {
+            var additionalCost = tax + attrs.shipping;
+
+            var label = void 0;
+
+            if (tax && attrs.shipping) label = "shipping & tax";else if (tax) label = "tax";else if (attrs.shipping) label = "shipping";
+
+            priceDetails.innerHTML = "&nbsp;+ " + localizeCurrency(additionalCost) + " " + label;
+
+            if (additionalCost < 0) priceDetails.className = ATTENTION_CLASS;
+            element.appendChild(priceDetails);
+          }
+        }
+
+        if (attrs.amount <= 0) price.className = ATTENTION_CLASS;
       }
 
-      if (attrs.type !== "donate" && (region.tax || attrs.shipping)) {
-        var additionalCost = localizeCurrency(region.tax + attrs.shipping);
+      Object.keys(attrs).forEach(function (key) {
+        return script.setAttribute("data-" + key, attrs[key]);
+      });
 
-        var label = void 0;
+      element.appendChild(script);
 
-        if (region.tax && attrs.shipping) label = "shipping & tax";else if (region.tax) label = "tax";else if (attrs.shipping) label = "shipping";
-
-        shippingAndTax.innerHTML += "<small> + " + additionalCost + " " + label + "</small>";
-      }
-
-      button.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;
-      button.setAttribute("data-button", attrs.type);
-      button.setAttribute("data-type", attrs.type);
-      button.setAttribute("data-name", attrs.name);
-      button.setAttribute("data-currency", region.currency);
-      button.setAttribute("data-tax", region.tax);
-      button.setAttribute("data-shipping", attrs.shipping);
-      button.setAttribute("data-size", "small");
-      button.setAttribute("data-style", attrs.style);
-
-      if (attrs.type === "donate") button.setAttribute("data-amount-editable", attrs.amount);else button.setAttribute("data-amount", attrs.amount);
-
-      if (attrs.type === "buynow" || attrs.type === "cart") button.setAttribute("data-quantity-editable", QUANTITY_AMOUNT);else button.setAttribute("data-quantity", 1);
-
-      if (attrs.type === "subscribe") {
-        button.setAttribute("data-recurrence", attrs.recurrence);
-        button.setAttribute("data-period", attrs.timePeriod);
-      }
-
-      if (INSTALL_ID === "preview") button.setAttribute("data-env", "sandbox");
-
-      var element = elements[i] = Eager.createElement(attrs.location, elements[i]);
-
-      element.className = "eager-paypal-buttons";
-      infoWrapper.appendChild(itemName);
-      infoWrapper.appendChild(price);
-      infoWrapper.appendChild(shippingAndTax);
-      infoWrapper.appendChild(button);
-      element.appendChild(infoWrapper);
+      container.appendChild(element);
     });
+
+    container.setAttribute("data-state", "loaded");
   }
 
   if (document.readyState === "loading") {
@@ -144,13 +154,9 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
       clearTimeout(updateTimeout);
       options = nextOptions;
 
-      updateTimeout = setTimeout(function () {
-        elements.forEach(function (element) {
-          return Eager.createElement(null, element);
-        });
+      if (container) container.setAttribute("data-state", "refreshing");
 
-        updateElements();
-      }, UPDATE_DELAY);
+      updateTimeout = setTimeout(updateElements, UPDATE_DELAY);
     }
   };
 })();

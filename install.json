@@ -27,16 +27,16 @@
         "description": "Enter the email associated with your Paypal account or your <a target=\"_blank\" href=\"https://www.paypal.com/settings\"><strong>Merchant ID</strong></a>",
         "order": 1,
         "type": "string",
-        "placeholder": "Your@email.com"
+        "placeholder": "you@email.com"
         },
-      "region": {
+      "locale": {
         "showIf": {
           "merchant": {
             "op": "!=",
             "value": ""
           }
         },
-        "title": "Region",
+        "title": "Locale",
         "order": 2,
         "type": "object",
         "properties": {
@@ -60,19 +60,30 @@
             },
             "default": "USD"
           },
-          "tax": {
+          "taxPercentage": {
             "order": 2,
-            "title": "Tax",
+            "title": "Tax percentage",
+            "description": "How much tax for each purchase.",
             "type": "number",
-            "placeholder": 0.00,
-            "default": 0.00
+            "placeholder": "0.00"
           }
         }
       },
-      "buttons": {
-        "title": "Paypal Buttons",
-        "type": "array",
+      "location": {
         "order": 2,
+        "title": "Buttons location",
+        "description": "Where the buttons will appear on the page.",
+        "type": "object",
+        "format": "element",
+        "default": {
+          "selector": "body",
+          "method": "prepend"
+        }
+      },
+      "buttons": {
+        "title": "Items",
+        "type": "array",
+        "order": 3,
         "showIf": {
           "merchant": {
             "op": "!=",
@@ -84,7 +95,7 @@
           "properties": {
             "type": {
               "order": 1,
-              "title": "Type of button",
+              "title": "Button type",
               "type": "string",
               "enum": [
                 "buynow",
@@ -102,26 +113,23 @@
             },
             "name": {
               "order": 2,
-              "title": "Name of product",
+              "title": "Product name",
               "type": "string",
               "placeholder": "Electronics, e-book, clothes, etc"
             },
             "amount": {
               "order": 3,
-              "title": "Price of product/Amount to donate by default",
+              "title": "Product cost",
+              "description": "How much the buyer will be charged.",
               "type": "number",
-              "placeholder": 0.00,
-              "default": 0
+              "placeholder": "0.00"
             },
-            "recurrence": {
+            "shipping": {
               "order": 4,
-              "title": "Set how many times in a period a customer should be billed",
-              "type": "integer",
-              "placeholder": 1,
-              "default": 1,
-              "showIf": {
-                "buttons[].type": "subscribe"
-              }
+              "title": "Shipping cost",
+              "description": "How much the buyer will be charged for shipping.",
+              "type": "number",
+              "placeholder": "0.00"
             },
             "timePeriod": {
               "order": 5,
@@ -144,36 +152,16 @@
                 },
               "default": "M"
             },
-            "shipping": {
+            "recurrence": {
               "order": 6,
-              "title": "Shipping Price",
-              "type": "number",
-              "placeholder": 0.00,
-              "default": 0
-            },
-            "location": {
-              "order": 7,
-              "title": "Button location",
-              "type": "object",
-              "format": "element",
-              "default": {
-                "selector": "body",
-                "method": "prepend"
+              "title": "Recurrence",
+              "title": "How many times in a period a customer should be billed.",
+              "type": "integer",
+              "placeholder": 1,
+              "default": 1,
+              "showIf": {
+                "buttons[].type": "subscribe"
               }
-            },
-            "style": {
-              "order": 8,
-              "title": "Button color",
-              "type": "string",
-              "enum": [
-                "primary",
-                "secondary"
-              ],
-              "enumNames": {
-                "primary": "Blue",
-                "secondary": "Grey"
-                },
-              "default": "primary"
             }
           }
         }

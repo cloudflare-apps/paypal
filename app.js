@@ -1,34 +1,32 @@
 (function () {
   if (!window.addEventListener) return // Check for IE9+
 
-  let supportsLocale = false
+  let hasNativeLocale = false
 
   try {
     (0).toLocaleString("i")
   }
   catch (error) {
-    supportsLocale = error.name === "RangeError"
+    hasNativeLocale = error.name === "RangeError"
   }
 
-  const language = window.navigator.userLanguage || window.navigator.language
   const UPDATE_DELAY = 1500
-  const QUANTITY_AMOUNT = 1
-  const elements = []
-  // TODO find production host
-  const PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/paypal/JavaScriptButtons/master/dist/button.js"
-  const TIME_PERIOD_SYMBOLS = {
+  const PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/EagerApps/PayPalButtons/master/vendor/button.js"
+  const PERIOD_LABELS = {
     D: "Daily",
     W: "Weekly",
     M: "Monthly",
     Y: "Yearly"
   }
-  const CURRENCY_SYMBOL = {
-    GBP: "£",
-    USD: "$",
+  const CURRENCY_SYMBOLS = {
     CAD: "$",
     EUR: "€",
-    JPY: "¥"
+    GBP: "£",
+    JPY: "¥",
+    USD: "$"
   }
+  const language = window.navigator.language || window.navigator.userLanguage
+  const elements = []
 
   let options = INSTALL_OPTIONS
   let updateTimeout
@@ -50,79 +48,76 @@
   }
 
   function localizeCurrency(number) {
-    if (supportsLocale) return number.toLocaleString(language, {
-      style: "currency",
-      currency: options.region.currency
+    if (hasNativeLocale) return number.toLocaleString(language, {
+      currency: options.locale.currency,
+      style: "currency"
     })
 
-    return CURRENCY_SYMBOL[options.region.currency] + humanizedNumber(number)
+    return CURRENCY_SYMBOLS[options.locale.currency] + humanizedNumber(number)
   }
 
   function updateElements() {
     if (!options.merchant) return
 
-    const {buttons, region} = options
+    const {buttons, locale, location} = options
+    const taxPercentage = locale.taxPercentage || 0
 
-    buttons
-    .forEach((attrs, i) => {
-      const button = document.createElement("script")
+    buttons.forEach(($, index) => {
+      const script = document.createElement("script")
       const infoWrapper = document.createElement("eager-info-wrapper")
       const itemName = document.createElement("eager-item-name")
       const price = document.createElement("eager-price")
       const shippingAndTax = document.createElement("eager-shipping-and-tax")
+      const element = elements[index] = Eager.createElement(location, elements[index])
 
-      itemName.innerHTML = attrs.name
+      element.className = "eager-paypal-buttons"
+      itemName.innerHTML = $.name
+      script.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
 
-      if (attrs.type !== "donate") price.innerHTML = localizeCurrency(attrs.amount)
-
-      if (attrs.type === "subscribe") {
-        const time = attrs.recurrence === 1 ? "time" : "times"
-
-        price.innerHTML += ` ${attrs.recurrence} ${time} ${TIME_PERIOD_SYMBOLS[attrs.timePeriod]}`
+      const attrs = {
+        [$.type === "donate" ? "amount-editable" : "amount"]: $.amount || 0,
+        lc: language.replace("-", "_"), // Convert to expected format.
+        button: $.type,
+        currency: locale.currency,
+        host: INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com",
+        name: $.name,
+        shipping: $.shipping || 0,
+        size: "small",
+        style: "primary",
+        tax: $.type === "donate" ? 0 : taxPercentage * ($.amount || 0),
+        type: $.type,
+        [$.type === "buynow" || $.type === "cart" ? "quantity-editable" : "quantity"]: 1
       }
 
-      if (attrs.type !== "donate" && (region.tax || attrs.shipping)) {
-        const additionalCost = localizeCurrency(region.tax + attrs.shipping)
+      if ($.type === "subscribe") {
+        const time = $.recurrence === 1 ? "time" : "times"
+
+        price.innerHTML += ` ${$.recurrence} ${time} ${PERIOD_LABELS[$.timePeriod]}`
+
+        attrs.recurrence = $.recurrence
+        attrs.period = $.timePeriod
+      }
+
+      if ($.type !== "donate") price.innerHTML = localizeCurrency(attrs.amount)
+
+      if ($.type !== "donate" && (attrs.tax || attrs.shipping)) {
+        const additionalCost = localizeCurrency(attrs.tax + attrs.shipping)
 
         let label
 
-        if (region.tax && attrs.shipping) label = "shipping & tax"
-        else if (region.tax) label = "tax"
+        if (attrs.tax && attrs.shipping) label = "shipping & tax"
+        else if (attrs.tax) label = "tax"
         else if (attrs.shipping) label = "shipping"
 
         shippingAndTax.innerHTML += `<small> + ${additionalCost} ${label}</small>`
       }
 
-      button.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
-      button.setAttribute("data-button", attrs.type)
-      button.setAttribute("data-type", attrs.type)
-      button.setAttribute("data-name", attrs.name)
-      button.setAttribute("data-currency", region.currency)
-      button.setAttribute("data-tax", region.tax)
-      button.setAttribute("data-shipping", attrs.shipping)
-      button.setAttribute("data-size", "small")
-      button.setAttribute("data-style", attrs.style)
+      Object.keys(attrs).forEach(key => script.setAttribute(`data-${key}`, attrs[key]))
 
-      if (attrs.type === "donate") button.setAttribute("data-amount-editable", attrs.amount)
-      else button.setAttribute("data-amount", attrs.amount)
-
-      if (attrs.type === "buynow" || attrs.type === "cart") button.setAttribute("data-quantity-editable", QUANTITY_AMOUNT)
-      else button.setAttribute("data-quantity", 1)
-
-      if (attrs.type === "subscribe") {
-        button.setAttribute("data-recurrence", attrs.recurrence)
-        button.setAttribute("data-period", attrs.timePeriod)
-      }
-
-      if (INSTALL_ID === "preview") button.setAttribute("data-env", "sandbox")
-
-      const element = elements[i] = Eager.createElement(attrs.location, elements[i])
-
-      element.className = "eager-paypal-buttons"
       infoWrapper.appendChild(itemName)
       infoWrapper.appendChild(price)
       infoWrapper.appendChild(shippingAndTax)
-      infoWrapper.appendChild(button)
+      infoWrapper.appendChild(script)
       element.appendChild(infoWrapper)
     })
   }

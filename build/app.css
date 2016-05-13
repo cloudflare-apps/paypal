@@ -23,6 +23,7 @@
 .eager-paypal-buttons[data-state="refreshing"] {
   -webkit-filter: blur(2px);
           filter: blur(2px);
+  opacity: 0.9;
 }
 
 .eager-paypal-buttons eager-button-container {
@@ -47,7 +48,7 @@
   margin-bottom: 0.4em;
 }
 
-eager-item-name:empty:before {
+.eager-paypal-buttons eager-item-name:empty::before {
   display: inline;
   content: "Product name";
   opacity: 0.35;

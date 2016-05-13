@@ -131,9 +131,9 @@
               "type": "number",
               "placeholder": "0.00"
             },
-            "timePeriod": {
+            "period": {
               "order": 5,
-              "title": "Length of payment period",
+              "title": "Payment period",
               "type": "string",
               "showIf": {
                 "buttons[].type": "subscribe"
@@ -154,8 +154,8 @@
             },
             "recurrence": {
               "order": 6,
-              "title": "Recurrence",
-              "title": "How many times in a period a customer should be billed.",
+              "title": "Subscription length",
+              "description": "How long a customer should be billed.",
               "type": "integer",
               "placeholder": 1,
               "default": 1,

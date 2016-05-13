@@ -13,10 +13,10 @@
   const UPDATE_DELAY = 1500
   const PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/EagerApps/PayPalButtons/master/vendor/button.js"
   const PERIOD_LABELS = {
-    D: "Daily",
-    W: "Weekly",
-    M: "Monthly",
-    Y: "Yearly"
+    D: "day",
+    W: "week",
+    M: "month",
+    Y: "year"
   }
   const CURRENCY_SYMBOLS = {
     CAD: "$",
@@ -26,8 +26,7 @@
     USD: "$"
   }
   const language = window.navigator.language || window.navigator.userLanguage
-  const elements = []
-
+  let container
   let options = INSTALL_OPTIONS
   let updateTimeout
 
@@ -62,18 +61,22 @@
     const {buttons, locale, location} = options
     const taxPercentage = locale.taxPercentage || 0
 
-    buttons.forEach(($, index) => {
+    container = Eager.createElement(location, container)
+    container.className = "eager-paypal-buttons"
+
+    buttons.forEach($ => {
       const script = document.createElement("script")
-      const infoWrapper = document.createElement("eager-info-wrapper")
       const itemName = document.createElement("eager-item-name")
       const price = document.createElement("eager-price")
-      const shippingAndTax = document.createElement("eager-shipping-and-tax")
-      const element = elements[index] = Eager.createElement(location, elements[index])
+      const priceDetails = document.createElement("eager-price-details")
+      const element = document.createElement("eager-button-container")
 
-      element.className = "eager-paypal-buttons"
-      itemName.innerHTML = $.name
+      itemName.textContent = $.name
+      element.appendChild(itemName)
+
       script.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
 
+      const tax = $.type === "donate" ? 0 : taxPercentage * ($.amount || 0)
       const attrs = {
         [$.type === "donate" ? "amount-editable" : "amount"]: $.amount || 0,
         lc: language.replace("-", "_"), // Convert to expected format.
@@ -84,42 +87,52 @@
         shipping: $.shipping || 0,
         size: "small",
         style: "primary",
-        tax: $.type === "donate" ? 0 : taxPercentage * ($.amount || 0),
+        tax: tax.toPrecision(2),
         type: $.type,
         [$.type === "buynow" || $.type === "cart" ? "quantity-editable" : "quantity"]: 1
       }
 
-      if ($.type === "subscribe") {
-        const time = $.recurrence === 1 ? "time" : "times"
 
-        price.innerHTML += ` ${$.recurrence} ${time} ${PERIOD_LABELS[$.timePeriod]}`
+      if ($.type !== "donate") {
+        const localizedAmount = localizeCurrency(attrs.amount)
 
-        attrs.recurrence = $.recurrence
-        attrs.period = $.timePeriod
-      }
+        if ($.type === "subscribe") {
+          const plural = $.recurrence === 1 ? "" : "s" // HACK: brittle.
 
-      if ($.type !== "donate") price.innerHTML = localizeCurrency(attrs.amount)
+          price.textContent = `${localizedAmount} for ${$.recurrence} ${PERIOD_LABELS[$.period]}${plural}`
 
-      if ($.type !== "donate" && (attrs.tax || attrs.shipping)) {
-        const additionalCost = localizeCurrency(attrs.tax + attrs.shipping)
+          attrs.recurrence = $.recurrence
+          attrs.period = $.period
 
-        let label
+          element.appendChild(price)
+        }
+        else {
+          price.textContent = localizedAmount
 
-        if (attrs.tax && attrs.shipping) label = "shipping & tax"
-        else if (attrs.tax) label = "tax"
-        else if (attrs.shipping) label = "shipping"
+          if (tax || attrs.shipping) {
+            const additionalCost = localizeCurrency(tax + attrs.shipping)
 
-        shippingAndTax.innerHTML += `<small> + ${additionalCost} ${label}</small>`
+            let label
+
+            if (tax && attrs.shipping) label = "shipping & tax"
+            else if (tax) label = "tax"
+            else if (attrs.shipping) label = "shipping"
+
+            priceDetails.innerHTML = `&nbsp;+ ${additionalCost} ${label}`
+            element.appendChild(price)
+            element.appendChild(priceDetails)
+          }
+        }
       }
 
       Object.keys(attrs).forEach(key => script.setAttribute(`data-${key}`, attrs[key]))
 
-      infoWrapper.appendChild(itemName)
-      infoWrapper.appendChild(price)
-      infoWrapper.appendChild(shippingAndTax)
-      infoWrapper.appendChild(script)
-      element.appendChild(infoWrapper)
+      element.appendChild(script)
+
+      container.appendChild(element)
     })
+
+    container.setAttribute("data-state", "loaded")
   }
 
   if (document.readyState === "loading") {
@@ -134,11 +147,9 @@
       clearTimeout(updateTimeout)
       options = nextOptions
 
-      updateTimeout = setTimeout(() => {
-        elements.forEach(element => Eager.createElement(null, element))
+      if (container) container.setAttribute("data-state", "refreshing")
 
-        updateElements()
-      }, UPDATE_DELAY)
+      updateTimeout = setTimeout(updateElements, UPDATE_DELAY)
     }
   }
 }())

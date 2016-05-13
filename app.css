@@ -1,34 +1,70 @@
 .eager-paypal-buttons {
-  display: inline-block;
+  box-sizing: border-box;
+  display: block;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1em;
+  transition: filter 100ms linear;
+  width: 100%;
 }
 
-.eager-paypal-buttons eager-info-wrapper {
-  background-color: #efefef;
-  display: block;
-  border-radius: 5px;
+.eager-paypal-buttons[data-state="refreshing"] {
+  filter: blur(2px);
+}
+
+.eager-paypal-buttons eager-button-container {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+  display: inline-block;
+  flex: 0 0 auto;
+  margin: 0.4em;
+  max-width: 100%;
   padding: 1em;
-  margin-bottom: 5px;
+  width: 17em;
 }
 
 .eager-paypal-buttons eager-item-name {
   display: block;
   font-size: 2em;
   font-weight: bold;
+  line-height: 1;
+  margin-bottom: 0.4em;
 }
 
 .eager-paypal-buttons eager-price {
-  line-height: 2.5em;
+  display: inline-block;
+  line-height: 1.5;
+  vertical-align: center;
 }
 
-.eager-paypal-buttons eager-shipping-and-tax {
+.eager-paypal-buttons eager-price-details {
+  display: inline-block;
+  vertical-align: center;
+  font-size: 0.75em;
+  line-height: 1em;
+  opacity: 0.8;
+}
+
+.eager-paypal-buttons .paypal-group {
+  line-height: 1;
+  margin: 0.5em 0 0.8em;
+  padding: 0;
+}
+
+.eager-paypal-buttons button.paypal-button {
   display: block;
-  line-height: 1.5em;
+  margin: 0 auto;
 }
 
-.eager-paypal-buttons .paypal-button-widget {
-  text-align: center;
+.eager-paypal-buttons eager-price + .paypal-button-widget {
+  margin-top: 0.8em;
 }
 
-.eager-paypal-buttons + .eager-paypal-buttons {
-  margin-left: 5px;
+.eager-paypal-buttons .paypal-input {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 3px;
+  padding: 0.3em 0.4em;
+  width: 1.8em;
 }

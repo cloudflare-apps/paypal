@@ -18,10 +18,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   var UPDATE_DELAY = 1500;
   var PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/EagerApps/PayPalButtons/master/vendor/button.js";
   var PERIOD_LABELS = {
-    D: "Daily",
-    W: "Weekly",
-    M: "Monthly",
-    Y: "Yearly"
+    D: "day",
+    W: "week",
+    M: "month",
+    Y: "year"
   };
   var CURRENCY_SYMBOLS = {
     CAD: "$",
@@ -31,8 +31,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     USD: "$"
   };
   var language = window.navigator.language || window.navigator.userLanguage;
-  var elements = [];
-
+  var container = void 0;
   var options = INSTALL_OPTIONS;
   var updateTimeout = void 0;
 
@@ -76,53 +75,65 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     var taxPercentage = locale.taxPercentage || 0;
 
-    buttons.forEach(function ($, index) {
+    container = Eager.createElement(location, container);
+    container.className = "eager-paypal-buttons";
+
+    buttons.forEach(function ($) {
       var _attrs;
 
       var script = document.createElement("script");
-      var infoWrapper = document.createElement("eager-info-wrapper");
       var itemName = document.createElement("eager-item-name");
       var price = document.createElement("eager-price");
-      var shippingAndTax = document.createElement("eager-shipping-and-tax");
-      var element = elements[index] = Eager.createElement(location, elements[index]);
+      var priceDetails = document.createElement("eager-price-details");
+      var element = document.createElement("eager-button-container");
 
-      element.className = "eager-paypal-buttons";
-      itemName.innerHTML = $.name;
+      itemName.textContent = $.name;
+      element.appendChild(itemName);
+
       script.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;
 
-      var attrs = (_attrs = {}, _defineProperty(_attrs, $.type === "donate" ? "amount-editable" : "amount", $.amount || 0), _defineProperty(_attrs, "lc", language.replace("-", "_")), _defineProperty(_attrs, "button", $.type), _defineProperty(_attrs, "currency", locale.currency), _defineProperty(_attrs, "host", INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com"), _defineProperty(_attrs, "name", $.name), _defineProperty(_attrs, "shipping", $.shipping || 0), _defineProperty(_attrs, "size", "small"), _defineProperty(_attrs, "style", "primary"), _defineProperty(_attrs, "tax", $.type === "donate" ? 0 : taxPercentage * ($.amount || 0)), _defineProperty(_attrs, "type", $.type), _defineProperty(_attrs, $.type === "buynow" || $.type === "cart" ? "quantity-editable" : "quantity", 1), _attrs);
+      var tax = $.type === "donate" ? 0 : taxPercentage * ($.amount || 0);
+      var attrs = (_attrs = {}, _defineProperty(_attrs, $.type === "donate" ? "amount-editable" : "amount", $.amount || 0), _defineProperty(_attrs, "lc", language.replace("-", "_")), _defineProperty(_attrs, "button", $.type), _defineProperty(_attrs, "currency", locale.currency), _defineProperty(_attrs, "host", INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com"), _defineProperty(_attrs, "name", $.name), _defineProperty(_attrs, "shipping", $.shipping || 0), _defineProperty(_attrs, "size", "small"), _defineProperty(_attrs, "style", "primary"), _defineProperty(_attrs, "tax", tax.toPrecision(2)), _defineProperty(_attrs, "type", $.type), _defineProperty(_attrs, $.type === "buynow" || $.type === "cart" ? "quantity-editable" : "quantity", 1), _attrs);
 
-      if ($.type === "subscribe") {
-        var time = $.recurrence === 1 ? "time" : "times";
+      if ($.type !== "donate") {
+        var localizedAmount = localizeCurrency(attrs.amount);
 
-        price.innerHTML += " " + $.recurrence + " " + time + " " + PERIOD_LABELS[$.timePeriod];
+        if ($.type === "subscribe") {
+          var plural = $.recurrence === 1 ? "" : "s"; // HACK: brittle.
 
-        attrs.recurrence = $.recurrence;
-        attrs.period = $.timePeriod;
-      }
+          price.textContent = localizedAmount + " for " + $.recurrence + " " + PERIOD_LABELS[$.period] + plural;
 
-      if ($.type !== "donate") price.innerHTML = localizeCurrency(attrs.amount);
+          attrs.recurrence = $.recurrence;
+          attrs.period = $.period;
 
-      if ($.type !== "donate" && (attrs.tax || attrs.shipping)) {
-        var additionalCost = localizeCurrency(attrs.tax + attrs.shipping);
+          element.appendChild(price);
+        } else {
+          price.textContent = localizedAmount;
 
-        var label = void 0;
+          if (tax || attrs.shipping) {
+            var additionalCost = localizeCurrency(tax + attrs.shipping);
 
-        if (attrs.tax && attrs.shipping) label = "shipping & tax";else if (attrs.tax) label = "tax";else if (attrs.shipping) label = "shipping";
+            var label = void 0;
 
-        shippingAndTax.innerHTML += "<small> + " + additionalCost + " " + label + "</small>";
+            if (tax && attrs.shipping) label = "shipping & tax";else if (tax) label = "tax";else if (attrs.shipping) label = "shipping";
+
+            priceDetails.innerHTML = "&nbsp;+ " + additionalCost + " " + label;
+            element.appendChild(price);
+            element.appendChild(priceDetails);
+          }
+        }
       }
 
       Object.keys(attrs).forEach(function (key) {
         return script.setAttribute("data-" + key, attrs[key]);
       });
 
-      infoWrapper.appendChild(itemName);
-      infoWrapper.appendChild(price);
-      infoWrapper.appendChild(shippingAndTax);
-      infoWrapper.appendChild(script);
-      element.appendChild(infoWrapper);
+      element.appendChild(script);
+
+      container.appendChild(element);
     });
+
+    container.setAttribute("data-state", "loaded");
   }
 
   if (document.readyState === "loading") {
@@ -136,13 +147,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       clearTimeout(updateTimeout);
       options = nextOptions;
 
-      updateTimeout = setTimeout(function () {
-        elements.forEach(function (element) {
-          return Eager.createElement(null, element);
-        });
+      if (container) container.setAttribute("data-state", "refreshing");
 
-        updateElements();
-      }, UPDATE_DELAY);
+      updateTimeout = setTimeout(updateElements, UPDATE_DELAY);
     }
   };
 })();

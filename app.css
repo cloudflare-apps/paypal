@@ -32,6 +32,12 @@
   margin-bottom: 0.4em;
 }
 
+eager-item-name:empty:before {
+  display: inline;
+  content: "Product name";
+  opacity: 0.35;
+}
+
 .eager-paypal-buttons eager-price {
   display: inline-block;
   line-height: 1.5;

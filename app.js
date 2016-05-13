@@ -59,7 +59,7 @@
     if (!options.merchant) return
 
     const {buttons, locale, location} = options
-    const taxPercentage = locale.taxPercentage || 0
+    const taxPercentage = parseFloat(locale.taxPercentage || 0, 10) / 100
 
     container = Eager.createElement(location, container)
     container.className = "eager-paypal-buttons"

@@ -73,7 +73,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var locale = _options.locale;
     var location = _options.location;
 
-    var taxPercentage = locale.taxPercentage || 0;
+    var taxPercentage = parseFloat(locale.taxPercentage || 0, 10) / 100;
 
     container = Eager.createElement(location, container);
     container.className = "eager-paypal-buttons";

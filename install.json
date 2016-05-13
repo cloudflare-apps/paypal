@@ -64,12 +64,18 @@
             "order": 2,
             "title": "Tax percentage",
             "description": "How much tax for each purchase.",
-            "type": "number",
-            "placeholder": "0.00"
+            "type": "string",
+            "placeholder": "0%"
           }
         }
       },
       "location": {
+        "showIf": {
+          "merchant": {
+            "op": "!=",
+            "value": ""
+          }
+        },
         "order": 2,
         "title": "Buttons location",
         "description": "Where the buttons will appear on the page.",

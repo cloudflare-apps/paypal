@@ -107,6 +107,7 @@
           element.appendChild(price)
         }
         else {
+          element.appendChild(price)
           price.textContent = localizedAmount
 
           if (tax || attrs.shipping) {
@@ -119,7 +120,6 @@
             else if (attrs.shipping) label = "shipping"
 
             priceDetails.innerHTML = `&nbsp;+ ${additionalCost} ${label}`
-            element.appendChild(price)
             element.appendChild(priceDetails)
           }
         }

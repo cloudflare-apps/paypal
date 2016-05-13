@@ -108,6 +108,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
           element.appendChild(price);
         } else {
+          element.appendChild(price);
           price.textContent = localizedAmount;
 
           if (tax || attrs.shipping) {
@@ -118,7 +119,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             if (tax && attrs.shipping) label = "shipping & tax";else if (tax) label = "tax";else if (attrs.shipping) label = "shipping";
 
             priceDetails.innerHTML = "&nbsp;+ " + additionalCost + " " + label;
-            element.appendChild(price);
             element.appendChild(priceDetails);
           }
         }

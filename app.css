@@ -36,7 +36,11 @@
 .eager-paypal-buttons eager-item-name:empty::before {
   display: inline;
   content: "Product name";
-  opacity: 0.35;
+}
+
+.eager-paypal-buttons .eager-attention {
+  color: rgb(172, 104, 62);
+  opacity: 0.4;
 }
 
 .eager-paypal-buttons eager-price {

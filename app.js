@@ -10,6 +10,7 @@
     hasNativeLocale = error.name === "RangeError"
   }
 
+  const ATTENTION_CLASS = "eager-attention"
   const UPDATE_DELAY = 1500
   const PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/EagerApps/PayPalButtons/master/vendor/button.js"
   const PERIOD_LABELS = {
@@ -72,6 +73,8 @@
       const element = document.createElement("eager-button-container")
 
       itemName.textContent = $.name
+      if (!itemName.textContent) itemName.className = ATTENTION_CLASS
+
       element.appendChild(itemName)
 
       script.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
@@ -111,7 +114,7 @@
           price.textContent = localizedAmount
 
           if (tax || attrs.shipping) {
-            const additionalCost = localizeCurrency(tax + attrs.shipping)
+            const additionalCost = tax + attrs.shipping
 
             let label
 
@@ -119,10 +122,14 @@
             else if (tax) label = "tax"
             else if (attrs.shipping) label = "shipping"
 
-            priceDetails.innerHTML = `&nbsp;+ ${additionalCost} ${label}`
+            priceDetails.innerHTML = `&nbsp;+ ${localizeCurrency(additionalCost)} ${label}`
+
+            if (additionalCost < 0) priceDetails.className = ATTENTION_CLASS
             element.appendChild(priceDetails)
           }
         }
+
+        if (attrs.amount <= 0) price.className = ATTENTION_CLASS
       }
 
       Object.keys(attrs).forEach(key => script.setAttribute(`data-${key}`, attrs[key]))

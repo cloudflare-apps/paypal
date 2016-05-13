@@ -18,11 +18,14 @@
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 3px;
   display: inline-block;
+  display: flex;
   flex: 0 0 auto;
+  flex-flow: column;
+  justify-content: space-between;
   margin: 0.4em;
   max-width: 100%;
   padding: 1em;
-  width: 17em;
+  width: 18em;
 }
 
 .eager-paypal-buttons eager-item-name {
@@ -61,11 +64,16 @@
   line-height: 1;
   margin: 0.5em 0 0.8em;
   padding: 0;
+  text-indent: 0;
 }
 
 .eager-paypal-buttons button.paypal-button {
   display: block;
   margin: 0 auto;
+}
+
+.eager-paypal-buttons button.paypal-button .paypal-button-logo {
+  background-color: #fefefe;
 }
 
 .eager-paypal-buttons eager-price + .paypal-button-widget {

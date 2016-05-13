@@ -128,14 +128,16 @@
               "title": "Product cost",
               "description": "How much the buyer will be charged.",
               "type": "number",
-              "placeholder": "0.00"
+              "placeholder": "0.00",
+              "minimum": 0
             },
             "shipping": {
               "order": 4,
               "title": "Shipping cost",
               "description": "How much the buyer will be charged for shipping.",
               "type": "number",
-              "placeholder": "0.00"
+              "placeholder": "0.00",
+              "minimum": 0
             },
             "period": {
               "order": 5,

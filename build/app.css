@@ -20,6 +20,15 @@
   width: 100%;
 }
 
+.eager-paypal-buttons div {
+  background: initial;
+  border: initial;
+  color: initial;
+  margin: initial;
+  padding: initial;
+  width: initial;
+}
+
 .eager-paypal-buttons[data-state="refreshing"] {
   -webkit-filter: blur(2px);
           filter: blur(2px);

@@ -133,7 +133,7 @@
               "showIf": {
                 "buttons[].type": {
                   "op": "==",
-                  "method": "some",
+                  "method": "any",
                   "value": ["buynow", "cart", "subscribe"]
                 }
               }
@@ -148,7 +148,7 @@
               "showIf": {
                 "buttons[].type": {
                   "op": "==",
-                  "method": "some",
+                  "method": "any",
                   "value": ["buynow", "cart"]
                 }
               }

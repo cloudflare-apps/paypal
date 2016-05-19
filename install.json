@@ -129,7 +129,14 @@
               "description": "How much the buyer will be charged.",
               "type": "number",
               "placeholder": "0.00",
-              "minimum": 0
+              "minimum": 0,
+              "showIf": {
+                "buttons[].type": {
+                  "op": "==",
+                  "method": "some",
+                  "value": ["buynow", "cart", "subscribe"]
+                }
+              }
             },
             "shipping": {
               "order": 4,
@@ -137,7 +144,14 @@
               "description": "How much the buyer will be charged for shipping.",
               "type": "number",
               "placeholder": "0.00",
-              "minimum": 0
+              "minimum": 0,
+              "showIf": {
+                "buttons[].type": {
+                  "op": "==",
+                  "method": "some",
+                  "value": ["buynow", "cart"]
+                }
+              }
             },
             "period": {
               "order": 5,

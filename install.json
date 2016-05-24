@@ -110,11 +110,7 @@
               "placeholder": "0.00",
               "minimum": 0,
               "showIf": {
-                "buttons[].type": {
-                  "op": "==",
-                  "method": "any",
-                  "value": ["buynow"]
-                }
+                "buttons[].type": "buynow"
               }
             },
             "amountDonate": {
@@ -124,11 +120,7 @@
               "placeholder": "0.00",
               "minimum": 0,
               "showIf": {
-                "buttons[].type": {
-                  "op": "==",
-                  "method": "any",
-                  "value": ["donate"]
-                }
+                "buttons[].type": "donate"
               }
             },
             "amountSubscribe": {
@@ -138,11 +130,7 @@
               "placeholder": "0.00",
               "minimum": 0,
               "showIf": {
-                "buttons[].type": {
-                  "op": "==",
-                  "method": "any",
-                  "value": ["subscribe"]
-                }
+                "buttons[].type": "subscribe"
               }
             },
             "shipping": {
@@ -153,11 +141,7 @@
               "placeholder": "0.00",
               "minimum": 0,
               "showIf": {
-                "buttons[].type": {
-                  "op": "==",
-                  "method": "any",
-                  "value": ["buynow"]
-                }
+                "buttons[].type": "buynow"
               }
             },
             "period": {

@@ -89,10 +89,42 @@
   margin-top: 0.8em;
 }
 
-.eager-paypal-buttons .paypal-input {
+.eager-paypal-buttons paypal-input-container {
+  align-items: baseline;
   background: rgba(255, 255, 255, 0.75);
   border: 1px solid rgba(0, 0, 0, 0.35);
   border-radius: 3px;
+  display: inline-block;
+  display: inline-flex;
   padding: 0.3em 0.4em;
-  width: 1.8em;
+  width: 2.4em;
+}
+
+.eager-paypal-buttons paypal-input-container::before {
+  content: attr(data-currency);
+  display: inline-block;
+  flex: 0 0 auto;
+  font-size: 0.85em;
+  margin-right: 0.05em;
+  opacity: 0.65;
+  vertical-align: middle;
+}
+
+.eager-paypal-buttons paypal-input-container > input {
+  background-color: transparent;
+  border: none;
+  display: inline-block;
+  flex: 1 1 auto;
+  font-size: 0.85em;
+  height: auto;
+  margin: 0;
+  min-height: 0;
+  min-width: 0;
+  padding: 0;
+  vertical-align: middle;
+  width: auto;
+}
+
+.eager-paypal-buttons paypal-input-container > input:focus {
+  outline: none;
 }

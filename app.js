@@ -72,6 +72,11 @@
       const price = document.createElement("eager-price")
       const priceDetails = document.createElement("eager-price-details")
       const element = document.createElement("eager-button-container")
+      const AMOUNTS = {
+        buynow: $.amount,
+        donate: $.amountDonate,
+        subscribe: $.amountSubscribe
+      }
 
       itemName.textContent = $.name
       if (!itemName.textContent) itemName.className = ATTENTION_CLASS
@@ -80,9 +85,9 @@
 
       script.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
 
-      const tax = $.type === "donate" ? 0 : taxPercentage * ($.amount || 0)
+      const tax = $.type === "donate" ? 0 : taxPercentage * (AMOUNTS[$.type] || 0)
       const attrs = {
-        [$.type === "donate" ? "amount-editable" : "amount"]: $.amount || 0,
+        [$.type === "donate" ? "amount-editable" : "amount"]: AMOUNTS[$.type] || 0,
         lc: language.replace("-", "_"), // Convert to expected format.
         button: $.type,
         currency: locale.currency,
@@ -93,7 +98,7 @@
         style: "primary",
         tax: Math.round(tax * 100) / 100, // Convert to expected precision.
         type: $.type,
-        [$.type === "buynow" || $.type === "cart" ? "quantity-editable" : "quantity"]: 1
+        [$.type === "buynow" ? "quantity-editable" : "quantity"]: 1
       }
 
       if ($.type !== "donate") {

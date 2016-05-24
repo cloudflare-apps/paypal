@@ -88,11 +88,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var price = document.createElement("eager-price");
       var priceDetails = document.createElement("eager-price-details");
       var element = document.createElement("eager-button-container");
-      var AMOUNTS = {
-        buynow: $.amount,
-        donate: $.amountDonate,
-        subscribe: $.amountSubscribe
-      };
 
       itemName.textContent = $.name;
       if (!itemName.textContent) itemName.className = ATTENTION_CLASS;
@@ -101,8 +96,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       script.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;
 
-      var tax = $.type === "donate" ? 0 : taxPercentage * (AMOUNTS[$.type] || 0);
-      var attrs = (_attrs = {}, _defineProperty(_attrs, $.type === "donate" ? "amount-editable" : "amount", AMOUNTS[$.type] || 0), _defineProperty(_attrs, "lc", language.replace("-", "_")), _defineProperty(_attrs, "button", $.type), _defineProperty(_attrs, "currency", locale.currency), _defineProperty(_attrs, "host", INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com"), _defineProperty(_attrs, "name", $.name), _defineProperty(_attrs, "shipping", $.shipping || 0), _defineProperty(_attrs, "size", "small"), _defineProperty(_attrs, "style", "primary"), _defineProperty(_attrs, "tax", Math.round(tax * 100) / 100), _defineProperty(_attrs, "type", $.type), _defineProperty(_attrs, $.type === "buynow" ? "quantity-editable" : "quantity", 1), _attrs);
+      var amount = $["amount-" + $.type] || 0;
+      var tax = $.type === "donate" ? 0 : taxPercentage * amount;
+      var attrs = (_attrs = {}, _defineProperty(_attrs, $.type === "donate" ? "amount-editable" : "amount", amount), _defineProperty(_attrs, "lc", language.replace("-", "_")), _defineProperty(_attrs, "button", $.type), _defineProperty(_attrs, "currency", locale.currency), _defineProperty(_attrs, "host", INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com"), _defineProperty(_attrs, "name", $.name), _defineProperty(_attrs, "shipping", $.shipping || 0), _defineProperty(_attrs, "size", "small"), _defineProperty(_attrs, "style", "primary"), _defineProperty(_attrs, "tax", Math.round(tax * 100) / 100), _defineProperty(_attrs, "type", $.type), _defineProperty(_attrs, $.type === "buynow" ? "quantity-editable" : "quantity", 1), _attrs);
 
       if ($.type !== "donate") {
         var localizedAmount = localizeCurrency(attrs.amount);

@@ -102,9 +102,9 @@
               "type": "string",
               "placeholder": "Electronics, e-book, clothes, etc"
             },
-            "amount": {
+            "amount-buynow": {
               "order": 3,
-              "title": "Product cost",
+              "title": "Product price",
               "description": "How much the buyer will be charged.",
               "type": "number",
               "placeholder": "0.00",
@@ -113,9 +113,9 @@
                 "buttons[].type": "buynow"
               }
             },
-            "amountDonate": {
+            "amount-donate": {
               "order": 3,
-              "title": "Suggested donation amount",
+              "title": "Suggested donation",
               "type": "number",
               "placeholder": "0.00",
               "minimum": 0,
@@ -123,9 +123,10 @@
                 "buttons[].type": "donate"
               }
             },
-            "amountSubscribe": {
+            "amount-subscribe": {
               "order": 3,
               "title": "Subscription price",
+              "description": "How much the buyer will be charged.",
               "type": "number",
               "placeholder": "0.00",
               "minimum": 0,
@@ -147,6 +148,7 @@
             "period": {
               "order": 5,
               "title": "Payment period",
+              "description": "How often a customer will be billed.",
               "type": "string",
               "showIf": {
                 "buttons[].type": "subscribe"
@@ -168,7 +170,7 @@
             "recurrence": {
               "order": 6,
               "title": "Subscription length",
-              "description": "How long a customer should be billed.",
+              "description": "How long a customer will be billed.",
               "type": "integer",
               "placeholder": 1,
               "default": 1,

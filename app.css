@@ -76,6 +76,10 @@
   text-indent: 0;
 }
 
+.eager-paypal-buttons button.paypal-button * {
+  box-sizing: content-box;
+}
+
 .eager-paypal-buttons button.paypal-button {
   display: block;
   margin: 0 auto;

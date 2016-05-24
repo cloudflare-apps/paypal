@@ -61,6 +61,7 @@
 
     const {buttons, locale, location} = options
     const taxPercentage = parseFloat(locale.taxPercentage || 0, 10) / 100
+    const currencySymbol = CURRENCY_SYMBOLS[options.locale.currency]
 
     container = Eager.createElement(location, container)
     container.className = "eager-paypal-buttons"
@@ -132,6 +133,23 @@
       }
 
       Object.keys(attrs).forEach(key => script.setAttribute(`data-${key}`, attrs[key]))
+
+      script.addEventListener("load", () => {
+        const inputContainer = document.createElement("paypal-input-container")
+        const label = element.querySelector(".paypal-label")
+        const input = element.querySelector(".paypal-input")
+
+        if (!input) return
+
+        if ($.type === "donate") {
+          inputContainer.setAttribute("data-currency", currencySymbol)
+          input.placeholder = input.value
+        }
+
+        input.parentNode.removeChild(input)
+        inputContainer.appendChild(input)
+        label.appendChild(inputContainer)
+      })
 
       element.appendChild(script)
 

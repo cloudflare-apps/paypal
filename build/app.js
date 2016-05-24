@@ -75,6 +75,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var location = _options.location;
 
     var taxPercentage = parseFloat(locale.taxPercentage || 0, 10) / 100;
+    var currencySymbol = CURRENCY_SYMBOLS[options.locale.currency];
 
     container = Eager.createElement(location, container);
     container.className = "eager-paypal-buttons";
@@ -133,6 +134,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       Object.keys(attrs).forEach(function (key) {
         return script.setAttribute("data-" + key, attrs[key]);
+      });
+
+      script.addEventListener("load", function () {
+        var inputContainer = document.createElement("paypal-input-container");
+        var label = element.querySelector(".paypal-label");
+        var input = element.querySelector(".paypal-input");
+
+        if (!input) return;
+
+        if ($.type === "donate") {
+          inputContainer.setAttribute("data-currency", currencySymbol);
+          input.placeholder = input.value;
+        }
+
+        input.parentNode.removeChild(input);
+        inputContainer.appendChild(input);
+        label.appendChild(inputContainer);
       });
 
       element.appendChild(script);

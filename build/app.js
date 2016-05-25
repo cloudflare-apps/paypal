@@ -106,7 +106,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         if ($.type === "subscribe") {
           var plural = $.recurrence === 1 ? "" : "s"; // HACK: brittle.
 
-          price.textContent = localizedAmount + " for " + $.recurrence + " " + PERIOD_LABELS[$.period] + plural;
+          price.textContent = localizedAmount + "/" + PERIOD_LABELS[$.period] + " for " + $.recurrence + " " + PERIOD_LABELS[$.period] + plural;
 
           attrs.recurrence = $.recurrence;
           attrs.period = $.period;

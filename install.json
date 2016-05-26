@@ -30,12 +30,6 @@
         "placeholder": "you@email.com"
         },
       "locale": {
-        "showIf": {
-          "merchant": {
-            "op": "!=",
-            "value": ""
-          }
-        },
         "title": "Locale",
         "order": 2,
         "type": "object",
@@ -63,19 +57,12 @@
           "taxPercentage": {
             "order": 2,
             "title": "Tax percentage",
-            "description": "How much tax for each purchase.",
             "type": "string",
             "placeholder": "0%"
           }
         }
       },
       "location": {
-        "showIf": {
-          "merchant": {
-            "op": "!=",
-            "value": ""
-          }
-        },
         "order": 2,
         "title": "Buttons location",
         "description": "Where the buttons will appear on the page.",
@@ -90,12 +77,6 @@
         "title": "Items",
         "type": "array",
         "order": 3,
-        "showIf": {
-          "merchant": {
-            "op": "!=",
-            "value": ""
-          }
-        },
         "items": {
           "type": "object",
           "properties": {
@@ -105,13 +86,11 @@
               "type": "string",
               "enum": [
                 "buynow",
-                "cart",
                 "donate",
                 "subscribe"
               ],
               "enumNames": {
                 "buynow": "Buy Now",
-                "cart": "Add to Cart",
                 "donate": "Donate",
                 "subscribe": "Subscribe"
               },
@@ -123,19 +102,36 @@
               "type": "string",
               "placeholder": "Electronics, e-book, clothes, etc"
             },
-            "amount": {
+            "amount-buynow": {
               "order": 3,
-              "title": "Product cost",
+              "title": "Product price",
               "description": "How much the buyer will be charged.",
               "type": "number",
               "placeholder": "0.00",
               "minimum": 0,
               "showIf": {
-                "buttons[].type": {
-                  "op": "==",
-                  "method": "any",
-                  "value": ["buynow", "cart", "subscribe"]
-                }
+                "buttons[].type": "buynow"
+              }
+            },
+            "amount-donate": {
+              "order": 3,
+              "title": "Suggested donation",
+              "type": "number",
+              "placeholder": "0.00",
+              "minimum": 0,
+              "showIf": {
+                "buttons[].type": "donate"
+              }
+            },
+            "amount-subscribe": {
+              "order": 3,
+              "title": "Subscription price",
+              "description": "How much the buyer will be charged.",
+              "type": "number",
+              "placeholder": "0.00",
+              "minimum": 0,
+              "showIf": {
+                "buttons[].type": "subscribe"
               }
             },
             "shipping": {
@@ -146,16 +142,13 @@
               "placeholder": "0.00",
               "minimum": 0,
               "showIf": {
-                "buttons[].type": {
-                  "op": "==",
-                  "method": "any",
-                  "value": ["buynow", "cart"]
-                }
+                "buttons[].type": "buynow"
               }
             },
             "period": {
               "order": 5,
               "title": "Payment period",
+              "description": "How often a customer will be billed.",
               "type": "string",
               "showIf": {
                 "buttons[].type": "subscribe"
@@ -177,7 +170,7 @@
             "recurrence": {
               "order": 6,
               "title": "Subscription length",
-              "description": "How long a customer should be billed.",
+              "description": "How long a customer will be billed.",
               "type": "integer",
               "placeholder": 1,
               "default": 1,

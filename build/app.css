@@ -99,6 +99,10 @@
   text-indent: 0;
 }
 
+.eager-paypal-buttons button.paypal-button * {
+  box-sizing: content-box;
+}
+
 .eager-paypal-buttons button.paypal-button {
   display: block;
   margin: 0 auto;
@@ -126,7 +130,7 @@
   display: -ms-inline-flexbox;
   display: inline-flex;
   padding: 0.3em 0.4em;
-  width: 2.4em;
+  width: 2.6em;
 }
 
 .eager-paypal-buttons paypal-input-container::before {

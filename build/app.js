@@ -96,8 +96,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       script.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;
 
-      var tax = $.type === "donate" ? 0 : taxPercentage * ($.amount || 0);
-      var attrs = (_attrs = {}, _defineProperty(_attrs, $.type === "donate" ? "amount-editable" : "amount", $.amount || 0), _defineProperty(_attrs, "lc", language.replace("-", "_")), _defineProperty(_attrs, "button", $.type), _defineProperty(_attrs, "currency", locale.currency), _defineProperty(_attrs, "host", INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com"), _defineProperty(_attrs, "name", $.name), _defineProperty(_attrs, "shipping", $.shipping || 0), _defineProperty(_attrs, "size", "small"), _defineProperty(_attrs, "style", "primary"), _defineProperty(_attrs, "tax", Math.round(tax * 100) / 100), _defineProperty(_attrs, "type", $.type), _defineProperty(_attrs, $.type === "buynow" || $.type === "cart" ? "quantity-editable" : "quantity", 1), _attrs);
+      var amount = $["amount-" + $.type] || 0;
+      var tax = $.type === "donate" ? 0 : taxPercentage * amount;
+      var attrs = (_attrs = {}, _defineProperty(_attrs, $.type === "donate" ? "amount-editable" : "amount", amount), _defineProperty(_attrs, "lc", language.replace("-", "_")), _defineProperty(_attrs, "button", $.type), _defineProperty(_attrs, "currency", locale.currency), _defineProperty(_attrs, "host", INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com"), _defineProperty(_attrs, "name", $.name), _defineProperty(_attrs, "shipping", $.shipping || 0), _defineProperty(_attrs, "size", "small"), _defineProperty(_attrs, "style", "primary"), _defineProperty(_attrs, "tax", Math.round(tax * 100) / 100), _defineProperty(_attrs, "type", $.type), _defineProperty(_attrs, $.type === "buynow" ? "quantity-editable" : "quantity", 1), _attrs);
 
       if ($.type !== "donate") {
         var localizedAmount = localizeCurrency(attrs.amount);
@@ -105,7 +106,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         if ($.type === "subscribe") {
           var plural = $.recurrence === 1 ? "" : "s"; // HACK: brittle.
 
-          price.textContent = localizedAmount + " for " + $.recurrence + " " + PERIOD_LABELS[$.period] + plural;
+          price.textContent = localizedAmount + "/" + PERIOD_LABELS[$.period] + " for " + $.recurrence + " " + PERIOD_LABELS[$.period] + plural;
 
           attrs.recurrence = $.recurrence;
           attrs.period = $.period;

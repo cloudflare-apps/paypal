@@ -80,9 +80,10 @@
 
       script.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
 
-      const tax = $.type === "donate" ? 0 : taxPercentage * ($.amount || 0)
+      const amount = $["amount-" + $.type] || 0
+      const tax = $.type === "donate" ? 0 : taxPercentage * amount
       const attrs = {
-        [$.type === "donate" ? "amount-editable" : "amount"]: $.amount || 0,
+        [$.type === "donate" ? "amount-editable" : "amount"]: amount,
         lc: language.replace("-", "_"), // Convert to expected format.
         button: $.type,
         currency: locale.currency,
@@ -93,7 +94,7 @@
         style: "primary",
         tax: Math.round(tax * 100) / 100, // Convert to expected precision.
         type: $.type,
-        [$.type === "buynow" || $.type === "cart" ? "quantity-editable" : "quantity"]: 1
+        [$.type === "buynow" ? "quantity-editable" : "quantity"]: 1
       }
 
       if ($.type !== "donate") {
@@ -102,7 +103,7 @@
         if ($.type === "subscribe") {
           const plural = $.recurrence === 1 ? "" : "s" // HACK: brittle.
 
-          price.textContent = `${localizedAmount} for ${$.recurrence} ${PERIOD_LABELS[$.period]}${plural}`
+          price.textContent = `${localizedAmount}/${PERIOD_LABELS[$.period]} for ${$.recurrence} ${PERIOD_LABELS[$.period]}${plural}`
 
           attrs.recurrence = $.recurrence
           attrs.period = $.period

@@ -110,6 +110,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       element.appendChild(itemName);
 
+      if ($.description) {
+        var itemDescription = document.createElement("eager-item-description");
+
+        itemDescription.textContent = $.description;
+        element.appendChild(itemDescription);
+      }
+
       if ($.type !== "donate") {
         var localizedAmount = localizeCurrency(attrs.amount);
 

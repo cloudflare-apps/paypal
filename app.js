@@ -108,6 +108,13 @@
 
       element.appendChild(itemName)
 
+      if ($.description) {
+        const itemDescription = document.createElement("eager-item-description")
+
+        itemDescription.textContent = $.description
+        element.appendChild(itemDescription)
+      }
+
       if ($.type !== "donate") {
         const localizedAmount = localizeCurrency(attrs.amount)
 

@@ -123,8 +123,14 @@
                 "buttons[].type": "subscribe"
               }
             },
-            "amount-buynow": {
+            "description": {
               "order": 3,
+              "title": "Description",
+              "type": "string",
+              "format": "textarea"
+            },
+            "amount-buynow": {
+              "order": 4,
               "title": "Product price",
               "description": "How much the buyer will be charged.",
               "type": "number",
@@ -135,7 +141,7 @@
               }
             },
             "amount-donate": {
-              "order": 3,
+              "order": 4,
               "title": "Suggested donation",
               "type": "number",
               "placeholder": "0.00",
@@ -145,7 +151,7 @@
               }
             },
             "amount-subscribe": {
-              "order": 3,
+              "order": 4,
               "title": "Subscription price",
               "description": "How much the buyer will be charged.",
               "type": "number",
@@ -156,7 +162,7 @@
               }
             },
             "shipping": {
-              "order": 4,
+              "order": 5,
               "title": "Shipping cost",
               "description": "How much the buyer will be charged for shipping.",
               "type": "number",
@@ -167,7 +173,7 @@
               }
             },
             "showQuantity": {
-              "order": 5,
+              "order": 6,
               "type": "boolean",
               "title": "Show quantity",
               "showIf": {
@@ -175,7 +181,7 @@
               }
             },
             "period": {
-              "order": 5,
+              "order": 6,
               "title": "Payment period",
               "description": "How often a customer will be billed.",
               "type": "string",
@@ -197,7 +203,7 @@
               "default": "M"
             },
             "recurrence": {
-              "order": 6,
+              "order": 7,
               "title": "Subscription length",
               "description": "How long a customer will be billed.",
               "type": "integer",

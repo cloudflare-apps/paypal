@@ -47,7 +47,13 @@
   display: block;
   font-size: 2em;
   font-weight: bold;
-  line-height: 1;
+  line-height: 1.25;
+  margin-bottom: 0.2em;
+}
+
+.eager-paypal-buttons eager-item-description {
+  display: block;
+  line-height: 1.5;
   margin-bottom: 0.4em;
 }
 
@@ -72,7 +78,7 @@
   vertical-align: center;
   font-size: 0.75em;
   line-height: 1em;
-  margin-bottom: 0.8em;
+  margin-bottom: 1em;
   opacity: 0.8;
 }
 
@@ -85,7 +91,7 @@
 }
 
 .eager-paypal-buttons .paypal-group ~ button.paypal-button {
-  margin-top: 0.8em;
+  margin-top: 0.9em;
 }
 
 .eager-paypal-buttons .paypal-button-content {
@@ -119,9 +125,14 @@
   padding: 0;
 }
 
-.eager-paypal-buttons eager-button-container[data-button-type="subscribe"] eager-price + .paypal-button-widget {
-  margin-top: 0.4em;
+.eager-paypal-buttons eager-button-container[data-button-type="buynow"] eager-price + .paypal-button-widget {
+  margin-top: 0.5em;
 }
+
+.eager-paypal-buttons eager-button-container[data-button-type="subscribe"] eager-price + .paypal-button-widget {
+  margin-top: 0.5em;
+}
+
 
 .eager-paypal-buttons paypal-input-container {
   align-items: baseline;

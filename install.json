@@ -96,11 +96,32 @@
               },
               "default": "buynow"
             },
-            "name": {
+            "name-buynow": {
               "order": 2,
               "title": "Product name",
               "type": "string",
-              "placeholder": "Electronics, e-book, clothes, etc"
+              "placeholder": "Electronics, e-book, clothes, etc.",
+              "showIf": {
+                "buttons[].type": "buynow"
+              }
+            },
+            "name-donate": {
+              "order": 2,
+              "title": "Donation name",
+              "type": "string",
+              "placeholder": "Acme fundraiser, blog donation drive, etc.",
+              "showIf": {
+                "buttons[].type": "donate"
+              }
+            },
+            "name-subscribe": {
+              "order": 2,
+              "title": "Subscription name",
+              "type": "string",
+              "placeholder": "Newsletter, Ice cream club, etc.",
+              "showIf": {
+                "buttons[].type": "subscribe"
+              }
             },
             "amount-buynow": {
               "order": 3,
@@ -141,6 +162,14 @@
               "type": "number",
               "placeholder": "0.00",
               "minimum": 0,
+              "showIf": {
+                "buttons[].type": "buynow"
+              }
+            },
+            "showQuantity": {
+              "order": 5,
+              "type": "boolean",
+              "title": "Show quantity",
               "showIf": {
                 "buttons[].type": "buynow"
               }

@@ -18,6 +18,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   var ATTENTION_CLASS = "eager-attention";
   var UPDATE_DELAY = 1500;
   var PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/EagerApps/PayPalButtons/master/vendor/button.js";
+  var NAME_PLACEHOLDERS = {
+    buynow: "Product Name",
+    donate: "Donation Name",
+    subscribe: "Subscription Name"
+  };
   var PERIOD_LABELS = {
     D: "day",
     W: "week",
@@ -58,12 +63,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   }
 
   function localizeCurrency(number) {
-    if (hasNativeLocale) return number.toLocaleString(language, {
+    var localized = void 0;
+
+    if (hasNativeLocale) localized = number.toLocaleString(language, {
       currency: options.locale.currency,
       style: "currency"
-    });
+    });else localized = CURRENCY_SYMBOLS[options.locale.currency] + humanizedNumber(number);
 
-    return CURRENCY_SYMBOLS[options.locale.currency] + humanizedNumber(number);
+    return localized.replace(/\.00$/, "");
   }
 
   function updateElements() {
@@ -89,16 +96,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var priceDetails = document.createElement("eager-price-details");
       var element = document.createElement("eager-button-container");
 
-      itemName.textContent = $.name;
-      if (!itemName.textContent) itemName.className = ATTENTION_CLASS;
-
-      element.appendChild(itemName);
-
+      element.setAttribute("data-button-type", $.type);
       script.src = PAYPAL_SCRIPT_URL + "?merchant=" + options.merchant;
 
+      var name = $["name-" + $.type];
       var amount = $["amount-" + $.type] || 0;
-      var tax = $.type === "donate" ? 0 : taxPercentage * amount;
-      var attrs = (_attrs = {}, _defineProperty(_attrs, $.type === "donate" ? "amount-editable" : "amount", amount), _defineProperty(_attrs, "lc", language.replace("-", "_")), _defineProperty(_attrs, "button", $.type), _defineProperty(_attrs, "currency", locale.currency), _defineProperty(_attrs, "host", INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com"), _defineProperty(_attrs, "name", $.name), _defineProperty(_attrs, "shipping", $.shipping || 0), _defineProperty(_attrs, "size", "small"), _defineProperty(_attrs, "style", "primary"), _defineProperty(_attrs, "tax", Math.round(tax * 100) / 100), _defineProperty(_attrs, "type", $.type), _defineProperty(_attrs, $.type === "buynow" ? "quantity-editable" : "quantity", 1), _attrs);
+      var tax = $.type === "buynow" ? taxPercentage * amount : 0;
+      var attrs = (_attrs = {}, _defineProperty(_attrs, $.type === "donate" ? "amount-editable" : "amount", amount), _defineProperty(_attrs, "lc", language.replace("-", "_")), _defineProperty(_attrs, "button", $.type), _defineProperty(_attrs, "currency", locale.currency), _defineProperty(_attrs, "host", INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com"), _defineProperty(_attrs, "name", name), _defineProperty(_attrs, "shipping", $.shipping || 0), _defineProperty(_attrs, "size", "small"), _defineProperty(_attrs, "style", "primary"), _defineProperty(_attrs, "tax", Math.round(tax * 100) / 100), _defineProperty(_attrs, "type", $.type), _defineProperty(_attrs, $.type === "buynow" && $.showQuantity ? "quantity-editable" : "quantity", 1), _attrs);
+
+      itemName.textContent = name;
+      itemName.setAttribute("data-placeholder", NAME_PLACEHOLDERS[$.type]);
+      if (!name) itemName.className = ATTENTION_CLASS;
+
+      element.appendChild(itemName);
 
       if ($.type !== "donate") {
         var localizedAmount = localizeCurrency(attrs.amount);
@@ -123,7 +133,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
             if (tax && attrs.shipping) label = "shipping & tax";else if (tax) label = "tax";else if (attrs.shipping) label = "shipping";
 
-            priceDetails.innerHTML = "&nbsp;+ " + localizeCurrency(additionalCost) + " " + label;
+            priceDetails.innerHTML = "+ " + localizeCurrency(additionalCost) + " " + label;
 
             if (additionalCost < 0) priceDetails.className = ATTENTION_CLASS;
             element.appendChild(priceDetails);

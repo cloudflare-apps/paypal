@@ -13,6 +13,11 @@
   const ATTENTION_CLASS = "eager-attention"
   const UPDATE_DELAY = 1500
   const PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/EagerApps/PayPalButtons/master/vendor/button.js"
+  const NAME_PLACEHOLDERS = {
+    buynow: "Product Name",
+    donate: "Donation Name",
+    subscribe: "Subscription Name"
+  }
   const PERIOD_LABELS = {
     D: "day",
     W: "week",
@@ -48,12 +53,15 @@
   }
 
   function localizeCurrency(number) {
-    if (hasNativeLocale) return number.toLocaleString(language, {
+    let localized
+
+    if (hasNativeLocale) localized = number.toLocaleString(language, {
       currency: options.locale.currency,
       style: "currency"
     })
+    else localized = CURRENCY_SYMBOLS[options.locale.currency] + humanizedNumber(number)
 
-    return CURRENCY_SYMBOLS[options.locale.currency] + humanizedNumber(number)
+    return localized.replace(/\.00$/, "")
   }
 
   function updateElements() {
@@ -73,29 +81,32 @@
       const priceDetails = document.createElement("eager-price-details")
       const element = document.createElement("eager-button-container")
 
-      itemName.textContent = $.name
-      if (!itemName.textContent) itemName.className = ATTENTION_CLASS
-
-      element.appendChild(itemName)
-
+      element.setAttribute("data-button-type", $.type)
       script.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
 
+      const name = $["name-" + $.type]
       const amount = $["amount-" + $.type] || 0
-      const tax = $.type === "donate" ? 0 : taxPercentage * amount
+      const tax = $.type === "buynow" ? taxPercentage * amount : 0
       const attrs = {
         [$.type === "donate" ? "amount-editable" : "amount"]: amount,
         lc: language.replace("-", "_"), // Convert to expected format.
         button: $.type,
         currency: locale.currency,
         host: INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com",
-        name: $.name,
+        name,
         shipping: $.shipping || 0,
         size: "small",
         style: "primary",
         tax: Math.round(tax * 100) / 100, // Convert to expected precision.
         type: $.type,
-        [$.type === "buynow" ? "quantity-editable" : "quantity"]: 1
+        [$.type === "buynow" && $.showQuantity ? "quantity-editable" : "quantity"]: 1
       }
+
+      itemName.textContent = name
+      itemName.setAttribute("data-placeholder", NAME_PLACEHOLDERS[$.type])
+      if (!name) itemName.className = ATTENTION_CLASS
+
+      element.appendChild(itemName)
 
       if ($.type !== "donate") {
         const localizedAmount = localizeCurrency(attrs.amount)
@@ -123,7 +134,7 @@
             else if (tax) label = "tax"
             else if (attrs.shipping) label = "shipping"
 
-            priceDetails.innerHTML = `&nbsp;+ ${localizeCurrency(additionalCost)} ${label}`
+            priceDetails.innerHTML = `+ ${localizeCurrency(additionalCost)} ${label}`
 
             if (additionalCost < 0) priceDetails.className = ATTENTION_CLASS
             element.appendChild(priceDetails)

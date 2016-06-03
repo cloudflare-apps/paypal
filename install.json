@@ -8,6 +8,10 @@
       },
       {
         "type": "script",
+        "src": "./vendor/paypal-buttons.js"
+      },
+      {
+        "type": "script",
         "src": "./build/app.js"
       }
     ]
@@ -22,9 +26,9 @@
   },
   "options": {
     "properties": {
-      "merchant": {
-        "title": "Paypal Email",
-        "description": "Enter the email associated with your Paypal account or your <a target=\"_blank\" href=\"https://www.paypal.com/settings\"><strong>Merchant ID</strong></a>",
+      "merchantID": {
+        "title": "PayPal email",
+        "description": "The email associated with your PayPal account or your <a target=\"_blank\" href=\"https://www.paypal.com/settings\"><strong>Merchant ID</strong></a>.",
         "order": 1,
         "type": "string",
         "placeholder": "you@email.com"
@@ -202,15 +206,42 @@
                 },
               "default": "M"
             },
+
             "recurrence": {
               "order": 7,
-              "title": "Subscription length",
-              "description": "How long a customer will be billed.",
-              "type": "integer",
-              "placeholder": 1,
-              "default": 1,
+              "title": "Subscription duration",
+              "type": "object",
               "showIf": {
                 "buttons[].type": "subscribe"
+              },
+              "properties": {
+                "type": {
+                  "order": 1,
+                  "type": "string",
+                  "title": "How long should a customer be billed?",
+                  "format": "radios",
+                  "default": "reoccurring",
+                  "enum": [
+                    "reoccurring",
+                    "custom"
+                  ],
+                  "enumNames": {
+                    "reoccurring": "Reoccurring every period.",
+                    "custom": "A custom duration."
+                  }
+                },
+
+                "customDuration": {
+                  "order": 2,
+                  "minimum": 1,
+                  "title": "Custom Duration",
+                  "type": "integer",
+                  "placeholder": 1,
+                  "default": 2,
+                  "showIf": {
+                    "buttons[].recurrence.type": "custom"
+                  }
+                }
               }
             }
           }

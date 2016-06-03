@@ -1,80 +1,46 @@
+import {NAME_PLACEHOLDERS, PERIOD_LABELS, CURRENCY_SYMBOLS} from "./labels"
+import localizeCurrencyBase from "./localize-currency"
+import LOGO from "../media/PayPal.svg"
+
 (function () {
   if (!window.addEventListener) return // Check for IE9+
 
-  let hasNativeLocale = false
-
-  try {
-    (0).toLocaleString("i")
-  }
-  catch (error) {
-    hasNativeLocale = error.name === "RangeError"
-  }
-
   const ATTENTION_CLASS = "eager-attention"
   const UPDATE_DELAY = 1500
-  const PAYPAL_SCRIPT_URL = "https://cdn.rawgit.com/EagerApps/PayPalButtons/master/vendor/button.js"
-  const NAME_PLACEHOLDERS = {
-    buynow: "Product Name",
-    donate: "Donation Name",
-    subscribe: "Subscription Name"
-  }
-  const PERIOD_LABELS = {
-    D: "day",
-    W: "week",
-    M: "month",
-    Y: "year"
-  }
-  const CURRENCY_SYMBOLS = {
-    CAD: "$",
-    EUR: "€",
-    GBP: "£",
-    JPY: "¥",
-    USD: "$"
-  }
+  const IS_PREVIEW = INSTALL_ID === "preview"
+
   const language = window.navigator.language || window.navigator.userLanguage
   let container
   let options = INSTALL_OPTIONS
   let updateTimeout
 
-  function humanizedNumber(number = 0) {
-    const [wholes, decimals] = number.toFixed(2).split(".")
-
-    const formatted = wholes
-      .split("")
-      .reverse()
-      .reduce((accumulator, character, index, entries) => {
-        const placeIndex = index + 1
-        const delimiter = placeIndex !== entries.length && placeIndex % 3 === 0 ? "," : ""
-
-        return delimiter + character + accumulator
-      }, "")
-
-    return [formatted, decimals].join(".")
-  }
-
-  function localizeCurrency(number) {
-    let localized
-
-    if (hasNativeLocale) localized = number.toLocaleString(language, {
-      currency: options.locale.currency,
-      style: "currency"
-    })
-    else localized = CURRENCY_SYMBOLS[options.locale.currency] + humanizedNumber(number)
-
-    return localized.replace(/\.00$/, "")
+  function toArray(arrayLike) {
+    return Array.prototype.slice.call(arrayLike)
   }
 
   function updateElements() {
-    if (!options.merchant) return
+    container = Eager.createElement(options.location, container)
+    container.className = "eager-paypal-buttons"
 
-    const {buttons, locale, location} = options
+    if (!options.merchantID) {
+      if (!IS_PREVIEW) return
+
+      container.innerHTML = LOGO
+      container.innerHTML += `<eager-waiting-message>
+        Provide your PayPal email in the Eager app installer.
+      </eager-waiting-message>`
+      container.setAttribute("data-state", "waiting")
+
+      return
+    }
+
+    const {locale} = options
+    const localizeCurrency = localizeCurrencyBase.bind(null, language, locale.currency)
+    const processElement = window.paypal.button.processElement.bind(null, options.merchantID)
     const taxPercentage = parseFloat(locale.taxPercentage || 0, 10) / 100
     const currencySymbol = CURRENCY_SYMBOLS[options.locale.currency]
 
-    container = Eager.createElement(location, container)
-    container.className = "eager-paypal-buttons"
-
-    buttons.forEach($ => {
+    options.buttons.forEach($ => {
       const script = document.createElement("script")
       const itemName = document.createElement("eager-item-name")
       const price = document.createElement("eager-price")
@@ -82,7 +48,6 @@
       const element = document.createElement("eager-button-container")
 
       element.setAttribute("data-button-type", $.type)
-      script.src = `${PAYPAL_SCRIPT_URL}?merchant=${options.merchant}`
 
       const name = $["name-" + $.type]
       const amount = $["amount-" + $.type] || 0
@@ -92,7 +57,7 @@
         lc: language.replace("-", "_"), // Convert to expected format.
         button: $.type,
         currency: locale.currency,
-        host: INSTALL_ID === "preview" ? "www.sandbox.paypal.com" : "www.paypal.com",
+        host: IS_PREVIEW ? "www.sandbox.paypal.com" : "www.paypal.com",
         name,
         shipping: $.shipping || 0,
         size: "small",
@@ -119,11 +84,20 @@
         const localizedAmount = localizeCurrency(attrs.amount)
 
         if ($.type === "subscribe") {
-          const plural = $.recurrence === 1 ? "" : "s" // HACK: brittle.
+          const periodLabel = PERIOD_LABELS[$.period]
 
-          price.textContent = `${localizedAmount}/${PERIOD_LABELS[$.period]} for ${$.recurrence} ${PERIOD_LABELS[$.period]}${plural}`
+          price.textContent = `${localizedAmount}/${periodLabel.singular}`
 
-          attrs.recurrence = $.recurrence
+          if ($.recurrence.type === "reoccurring") {
+            attrs.recurrence = 0
+          }
+          else {
+            attrs.recurrence = parseInt($.recurrence.customDuration, 10) || 1
+            const agreement = attrs.recurrence === 1 ? "singular" : "plural"
+
+            price.textContent += ` for ${attrs.recurrence} ${periodLabel[agreement]}`
+          }
+
           attrs.period = $.period
 
           element.appendChild(price)
@@ -171,9 +145,10 @@
       })
 
       element.appendChild(script)
-
       container.appendChild(element)
     })
+
+    toArray(container.querySelectorAll("script")).forEach(processElement)
 
     container.setAttribute("data-state", "loaded")
   }

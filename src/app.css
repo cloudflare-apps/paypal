@@ -1,3 +1,13 @@
+@keyframes eager-paypal-pulse {
+  0% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .eager-paypal-buttons {
   display: block;
   display: flex;
@@ -27,6 +37,28 @@
 .eager-paypal-buttons[data-state="refreshing"] {
   filter: blur(2px);
   opacity: 0.9;
+}
+
+.eager-paypal-buttons[data-state="waiting"] {
+  flex-flow: column;
+}
+
+.eager-paypal-buttons > .eager-paypal-logo {
+  display: block;
+  height: 6em;
+  animation: eager-paypal-pulse linear 1.3s alternate infinite;
+}
+
+.eager-paypal-buttons eager-waiting-message {
+  border: 2px solid rgba(100, 100, 100, 0.05);
+  border-left: none;
+  border-right: none;
+  display: block;
+  flex: 0 0 auto;
+  font-size: 1.4em;
+  line-height: 1.7;
+  margin: 0.4em;
+  padding: 0.4em 0;
 }
 
 .eager-paypal-buttons eager-button-container {

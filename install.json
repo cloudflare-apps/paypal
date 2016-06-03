@@ -227,15 +227,15 @@
                     "custom"
                   ],
                   "enumNames": {
-                    "reoccurring": "Reoccurring every period.",
-                    "custom": "A custom duration."
+                    "reoccurring": "Until canceled",
+                    "custom": "Stop after..."
                   }
                 },
 
                 "customDuration": {
                   "order": 2,
                   "minimum": 1,
-                  "title": "Custom Duration",
+                  "title": "Number of (Days / Weeks / Months / Years)",
                   "type": "integer",
                   "placeholder": 1,
                   "default": 2,

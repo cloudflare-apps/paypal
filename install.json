@@ -31,7 +31,8 @@
         "description": "The email associated with your PayPal account or your <a target=\"_blank\" href=\"https://www.paypal.com/settings\"><strong>Merchant ID</strong></a>.",
         "order": 1,
         "type": "string",
-        "placeholder": "you@email.com"
+        "placeholder": "you@email.com",
+        "required": true
         },
       "locale": {
         "title": "Locale",

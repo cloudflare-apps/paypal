@@ -1,6 +1,5 @@
 import {NAME_PLACEHOLDERS, PERIOD_LABELS, CURRENCY_SYMBOLS} from "./labels"
 import localizeCurrencyBase from "./localize-currency"
-import LOGO from "../media/PayPal.svg"
 
 (function () {
   if (!window.addEventListener) return // Check for IE9+
@@ -19,24 +18,25 @@ import LOGO from "../media/PayPal.svg"
   }
 
   function updateElements() {
+    const {locale} = options
+    let {merchantID} = options
+
+    if (!merchantID && !IS_PREVIEW) return
+
     container = Eager.createElement(options.location, container)
     container.className = "eager-paypal-buttons"
 
-    if (!options.merchantID) {
-      if (!IS_PREVIEW) return
+    if (!merchantID) {
+      merchantID = "eager@paypal.preview"
 
-      container.innerHTML = LOGO
-      container.innerHTML += `<eager-waiting-message>
-        Provide your PayPal email in the Eager app installer.
+      container.innerHTML = `<eager-waiting-message>
+        Please provide your PayPal email in the app installer.
       </eager-waiting-message>`
       container.setAttribute("data-state", "waiting")
-
-      return
     }
 
-    const {locale} = options
     const localizeCurrency = localizeCurrencyBase.bind(null, language, locale.currency)
-    const processElement = window.paypal.button.processElement.bind(null, options.merchantID)
+    const processElement = window.paypal.button.processElement.bind(null, merchantID)
     const taxPercentage = parseFloat(locale.taxPercentage || 0, 10) / 100
     const currencySymbol = CURRENCY_SYMBOLS[options.locale.currency]
 

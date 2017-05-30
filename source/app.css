@@ -1,4 +1,4 @@
-.eager-paypal-buttons {
+.cf-paypal-buttons {
   display: block;
   display: flex;
   flex-wrap: wrap;
@@ -8,14 +8,14 @@
   width: 100%;
 }
 
-.eager-paypal-buttons,
-.eager-paypal-buttons *,
-.eager-paypal-buttons *::before,
-.eager-paypal-buttons *::after {
+.cf-paypal-buttons,
+.cf-paypal-buttons *,
+.cf-paypal-buttons *::before,
+.cf-paypal-buttons *::after {
   box-sizing: border-box;
 }
 
-.eager-paypal-buttons div {
+.cf-paypal-buttons div {
   background: initial;
   border: initial;
   color: initial;
@@ -24,12 +24,12 @@
   width: initial;
 }
 
-.eager-paypal-buttons[data-state="refreshing"] {
+.cf-paypal-buttons[data-state="refreshing"] {
   filter: blur(2px);
   opacity: 0.9;
 }
 
-.eager-paypal-buttons eager-waiting-message {
+.cf-paypal-buttons cf-waiting-message {
   border: 2px solid rgba(100, 100, 100, 0.1);
   border-left: none;
   border-right: none;
@@ -44,7 +44,7 @@
   width: 100%;
 }
 
-.eager-paypal-buttons eager-button-container {
+.cf-paypal-buttons cf-button-container {
   background-color: rgba(0, 0, 0, 0.05);
   border-radius: 3px;
   display: inline-block;
@@ -58,7 +58,7 @@
   width: 20.5em;
 }
 
-.eager-paypal-buttons eager-item-name {
+.cf-paypal-buttons cf-item-name {
   display: block;
   font-size: 2em;
   font-weight: bold;
@@ -66,29 +66,29 @@
   margin-bottom: 0.2em;
 }
 
-.eager-paypal-buttons eager-item-description {
+.cf-paypal-buttons cf-item-description {
   display: block;
   line-height: 1.5;
   margin-bottom: 0.4em;
 }
 
-.eager-paypal-buttons eager-item-name:empty::before {
+.cf-paypal-buttons cf-item-name:empty::before {
   display: inline;
   content: attr(data-placeholder);
 }
 
-.eager-paypal-buttons .eager-attention {
+.cf-paypal-buttons .cf-attention {
   color: rgb(172, 104, 62);
   opacity: 0.4;
 }
 
-.eager-paypal-buttons eager-price {
+.cf-paypal-buttons cf-price {
   display: inline-block;
   line-height: 1.6;
   vertical-align: center;
 }
 
-.eager-paypal-buttons eager-price-details {
+.cf-paypal-buttons cf-price-details {
   display: inline-block;
   vertical-align: center;
   font-size: 0.75em;
@@ -97,7 +97,7 @@
   opacity: 0.8;
 }
 
-.eager-paypal-buttons .paypal-group {
+.cf-paypal-buttons .paypal-group {
   font-variant: small-caps;
   line-height: 1;
   margin: 0;
@@ -105,28 +105,28 @@
   text-indent: 0;
 }
 
-.eager-paypal-buttons .paypal-group ~ button.paypal-button {
+.cf-paypal-buttons .paypal-group ~ button.paypal-button {
   margin-top: 0.9em;
 }
 
-.eager-paypal-buttons .paypal-button-content {
+.cf-paypal-buttons .paypal-button-content {
   height: auto;
 }
 
-.eager-paypal-buttons button.paypal-button {
+.cf-paypal-buttons button.paypal-button {
   display: block;
   margin: 0 auto;
   user-select: none;
 }
 
-.eager-paypal-buttons button.paypal-button .paypal-button-logo,
-.eager-paypal-buttons button.paypal-button .paypal-button-content {
+.cf-paypal-buttons button.paypal-button .paypal-button-logo,
+.cf-paypal-buttons button.paypal-button .paypal-button-content {
   display: inline-block;
   height: 28px;
   vertical-align: middle;
 }
 
-.eager-paypal-buttons button.paypal-button .paypal-button-logo {
+.cf-paypal-buttons button.paypal-button .paypal-button-logo {
   align-items: center;
   background-color: #fefefe;
   display: inline-flex;
@@ -134,22 +134,22 @@
   width: 28px;
 }
 
-.eager-paypal-buttons button.paypal-button .paypal-button-logo img {
+.cf-paypal-buttons button.paypal-button .paypal-button-logo img {
   display: block;
   margin: 0;
   padding: 0;
 }
 
-.eager-paypal-buttons eager-button-container[data-button-type="buynow"] eager-price + .paypal-button-widget {
+.cf-paypal-buttons cf-button-container[data-button-type="buynow"] cf-price + .paypal-button-widget {
   margin-top: 0.5em;
 }
 
-.eager-paypal-buttons eager-button-container[data-button-type="subscribe"] eager-price + .paypal-button-widget {
+.cf-paypal-buttons cf-button-container[data-button-type="subscribe"] cf-price + .paypal-button-widget {
   margin-top: 0.5em;
 }
 
 
-.eager-paypal-buttons paypal-input-container {
+.cf-paypal-buttons paypal-input-container {
   align-items: baseline;
   background: rgba(255, 255, 255, 0.75);
   border: 1px solid rgba(0, 0, 0, 0.35);
@@ -160,7 +160,7 @@
   width: 3.6em;
 }
 
-.eager-paypal-buttons paypal-input-container::before {
+.cf-paypal-buttons paypal-input-container::before {
   content: attr(data-currency);
   display: inline-block;
   flex: 0 0 auto;
@@ -170,7 +170,7 @@
   vertical-align: middle;
 }
 
-.eager-paypal-buttons paypal-input-container > input {
+.cf-paypal-buttons paypal-input-container > input {
   background-color: transparent;
   border: none;
   display: inline-block;
@@ -185,6 +185,6 @@
   width: auto;
 }
 
-.eager-paypal-buttons paypal-input-container > input:focus {
+.cf-paypal-buttons paypal-input-container > input:focus {
   outline: none;
 }

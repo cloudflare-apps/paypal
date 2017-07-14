@@ -24,8 +24,25 @@
       }
     ]
   },
+  "hooks": [
+    {
+      "endpoint": "https://teffen.fwd.wf",
+      "events": ["option-change:account"],
+      "block": true,
+      "authenticate": ["account"]
+    }
+  ],
   "options": {
     "properties": {
+      "account": {
+        "title": "PayPal Account",
+        "description": "Connect your PayPal account to fetch your merchant ID.",
+        "type": "object",
+        "format": "account",
+        "services": ["paypal"],
+        "order": 0
+      },
+
       "merchantID": {
         "title": "PayPal email",
         "description": "The email associated with your PayPal account or your <a target=\"_blank\" href=\"https://www.paypal.com/settings\"><strong>Merchant ID</strong></a>.",

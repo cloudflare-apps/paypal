@@ -24,9 +24,27 @@ export const PERIOD_LABELS = {
 }
 
 export const CURRENCY_SYMBOLS = {
+  AUD: '$',
+  BRL: '$',
   CAD: '$',
+  CHF: 'CHF',
+  CZK: 'Kč',
+  DKK: 'kr',
   EUR: '€',
   GBP: '£',
+  HKD: '$',
+  HUF: 'Ft',
+  ILS: '₪',
   JPY: '¥',
+  MXN: '$',
+  NOK: 'kr',
+  NZD: '$',
+  PHP: '₱',
+  PLN: 'zł',
+  RUB: '₽',
+  SEK: 'kr',
+  SGD: '$',
+  THB: '฿',
+  TWD: 'NT$',
   USD: '$'
 }

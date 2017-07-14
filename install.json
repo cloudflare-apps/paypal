@@ -27,11 +27,11 @@
   "options": {
     "properties": {
       "merchantID": {
-        "title": "PayPal email",
-        "description": "The email associated with your PayPal account or your <a target=\"_blank\" href=\"https://www.paypal.com/settings\"><strong>Merchant ID</strong></a>.",
+        "title": "PayPal ID",
+        "description": "<div>The email associated with your PayPal account.</div><div>Use your <a target=\"_blank\" href=\"https://www.paypal.com/settings\"><strong>Merchant ID</strong></a> if you would like to keep your email private.</div>",
         "order": 1,
         "type": "string",
-        "placeholder": "you@email.com",
+        "placeholder": "jessie@example.com or Merchant ID",
         "required": true
         },
       "locale": {
